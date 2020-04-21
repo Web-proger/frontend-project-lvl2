@@ -1,0 +1,26 @@
+{
+  "name": "frontend-project-lvl2",
+  "version": "0.0.1",
+  "description": "Вычислитель отличий",
+  "main": "index.js",
+  "bin": {
+    "gendiff": "gendiff"
+  },
+  "dependencies": {
+    "commander": "^5.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Web-proger/frontend-project-lvl2.git"
+  },
+  "author": "web-proger",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Web-proger/frontend-project-lvl2/issues"
+  },
+  "homepage": "https://github.com/Web-proger/frontend-project-lvl2#readme"
+}

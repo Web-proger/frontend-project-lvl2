@@ -1,0 +1,16 @@
+root = true
+
+[*]
+#Используем unix-совместимые символы переноса строк
+end_of_line = lf
+
+# Кодировка, тип отступа, размер отступа
+charset = utf-8
+indent_size = 2
+indent_style = space
+
+#Чистая строка в конце файла
+insert_final_newline = true
+
+#Убрать пробелы в конце строк.
+trim_trailing_whitespace = true
