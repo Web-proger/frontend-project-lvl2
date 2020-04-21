@@ -4,14 +4,25 @@
   "description": "Вычислитель отличий",
   "main": "index.js",
   "bin": {
-    "gendiff": "gendiff"
+    "gendiff": "dist/index.js"
   },
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "commander": "^5.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.5",
+    "eslint": "^6.8.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
