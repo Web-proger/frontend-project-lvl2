@@ -7,7 +7,7 @@ start:
 	npx babel-node src/index.js
 
 build:
-	NODE_ENV=production babel src --out-dir dist
+	npm run build
 
 publish:
 	npm publish --dry-run
