@@ -1,1 +1,2 @@
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FWeb-proger%2Ffrontend-project-lvl2%2Fbadge%3Fref%3Dmaster&style=flat)](https://actions-badge.atrox.dev/Web-proger/frontend-project-lvl2/goto?ref=master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/16463d4dcce59f603244/maintainability)](https://codeclimate.com/github/Web-proger/frontend-project-lvl1/maintainability)
