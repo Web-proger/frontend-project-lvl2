@@ -19,5 +19,6 @@ module.exports = {
       "babel"
     ],
     "rules": {
+      "no-console": 0
     }
 };
