@@ -8,7 +8,7 @@ export default (path1, path2) => {
 
   const keys = new Set([...Object.keys(before), ...Object.keys(after)]);
 
-  for (const key of keys) {
+  keys.forEach((key) => {
     const isBefore = _.has(before, key);
     const isAfter = _.has(after, key);
     const beforeValue = before[key];
@@ -20,14 +20,12 @@ export default (path1, path2) => {
       } else {
         diff = diff.concat(`- ${key}: ${beforeValue}\n+ ${key}: ${afterValue}\n`);
       }
+    } else if (isBefore) {
+      diff = diff.concat(`- ${key}: ${beforeValue}\n`);
     } else {
-      if (isBefore) {
-        diff = diff.concat(`- ${key}: ${beforeValue}\n`);
-      } else {
-        diff = diff.concat(`+ ${key}: ${afterValue}\n`);
-      }
+      diff = diff.concat(`+ ${key}: ${afterValue}\n`);
     }
-  }
+  });
 
   return diff;
 };
