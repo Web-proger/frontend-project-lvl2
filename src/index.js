@@ -13,8 +13,8 @@ program.parse(process.argv);
 
 const currentPath = process.cwd();
 const [, , file1, file2] = process.argv;
-const path1 = path.join(currentPath, file1);
-const path2 = path.join(currentPath, file2);
+const path1 = path.isAbsolute(file1) ? file1 : path.resolve(currentPath, file1);
+const path2 = path.isAbsolute(file1) ? file2 : path.join(currentPath, file2);
 
 const diff = genDiff(path1, path2);
 
