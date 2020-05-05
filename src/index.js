@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 import { program } from 'commander';
 import path from 'path';
-import fs from 'fs';
-import _ from 'lodash';
+import genDiff from './gendiff';
 
 program
   .version('0.0.1')
@@ -17,32 +16,6 @@ const [, , file1, file2] = process.argv;
 const path1 = path.join(currentPath, file1);
 const path2 = path.join(currentPath, file2);
 
-const before = JSON.parse(fs.readFileSync(path1, 'utf8'));
-const after = JSON.parse(fs.readFileSync(path2, 'utf8'));
-
-let diff = '';
-
-const keys = new Set([...Object.keys(before), ...Object.keys(after)]);
-
-for (const key of keys) {
-  const isBefore = _.has(before, key);
-  const isAfter = _.has(after, key);
-  const beforeValue = before[key];
-  const afterValue = after[key];
-
-  if (isBefore && isAfter) {
-    if (beforeValue === afterValue) {
-      diff = diff.concat(`  ${key}: ${beforeValue}\n`);
-    } else {
-      diff = diff.concat(`- ${key}: ${beforeValue}\n+ ${key}: ${afterValue}\n`);
-    }
-  } else {
-    if (isBefore) {
-      diff = diff.concat(`- ${key}: ${beforeValue}\n`);
-    } else {
-      diff = diff.concat(`+ ${key}: ${afterValue}\n`);
-    }
-  }
-}
+const diff = genDiff(path1, path2);
 
 console.log(diff);
