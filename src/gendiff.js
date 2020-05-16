@@ -5,19 +5,17 @@ import parsers from './parsers';
 
 export default (path1, path2) => {
   let diff = '';
-  const beforeData = fs.readFileSync(path1, 'utf8');
-  const afterData = fs.readFileSync(path2, 'utf8');
 
-  const before = parsers(beforeData, path.extname(path1));
-  const after = parsers(afterData, path.extname(path2));
+  const dataBefore = parsers(fs.readFileSync(path1, 'utf8'), path.extname(path1));
+  const dataAfter = parsers(fs.readFileSync(path2, 'utf8'), path.extname(path2));
 
-  const keys = new Set([...Object.keys(before), ...Object.keys(after)]);
+  const keys = new Set([...Object.keys(dataBefore), ...Object.keys(dataAfter)]);
 
   keys.forEach((key) => {
-    const isBefore = _.has(before, key);
-    const isAfter = _.has(after, key);
-    const beforeValue = before[key];
-    const afterValue = after[key];
+    const isBefore = _.has(dataBefore, key);
+    const isAfter = _.has(dataAfter, key);
+    const beforeValue = dataBefore[key];
+    const afterValue = dataAfter[key];
 
     if (isBefore && isAfter) {
       if (beforeValue === afterValue) {
