@@ -1,13 +1,7 @@
-import fs from 'fs';
-import path from 'path';
 import _ from 'lodash';
-import parsers from './parsers';
 
-export default (path1, path2) => {
+export default (dataBefore, dataAfter) => {
   let diff = '';
-
-  const dataBefore = parsers(fs.readFileSync(path1, 'utf8'), path.extname(path1));
-  const dataAfter = parsers(fs.readFileSync(path2, 'utf8'), path.extname(path2));
 
   const keys = new Set([...Object.keys(dataBefore), ...Object.keys(dataAfter)]);
 
