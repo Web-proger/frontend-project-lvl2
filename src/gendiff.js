@@ -5,25 +5,27 @@ export default (dataBefore, dataAfter) => {
 
   const keys = [...new Set([...Object.keys(dataBefore), ...Object.keys(dataAfter)])];
 
-  keys.forEach((key, i) => {
+  const structure = keys.map((key) => {
     const isBefore = _.has(dataBefore, key);
     const isAfter = _.has(dataAfter, key);
     const beforeValue = dataBefore[key];
     const afterValue = dataAfter[key];
-    const isLast = keys.length - 1 === i ? '' : '\n';
+
+    const item = {
+      name: key,
+      available: '',
+      equal: null,
+    };
 
     if (isBefore && isAfter) {
-      if (beforeValue === afterValue) {
-        diff = diff.concat(`    ${key}: ${beforeValue}${isLast}`);
-      } else {
-        diff = diff.concat(`  - ${key}: ${beforeValue}\n  + ${key}: ${afterValue}${isLast}`);
-      }
-    } else if (isBefore) {
-      diff = diff.concat(`  - ${key}: ${beforeValue}${isLast}`);
+      item.available = 'both';
+      item.equal = beforeValue === afterValue;
     } else {
-      diff = diff.concat(`  + ${key}: ${afterValue}${isLast}`);
+      item.available = isBefore ? 'before' : 'after';
     }
+
+    return item;
   });
 
-  return `{\n${diff}\n}`;
+  return structure || `{\n${diff}\n}`;
 };
