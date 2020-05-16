@@ -12,9 +12,9 @@ const getResult = (resultPath) => fs.readFileSync(resultPath, 'utf-8');
 const getData = (filePath) => parsers(fs.readFileSync(filePath, 'utf8'), path.extname(filePath));
 
 describe.each([
-  ['JSON', 'fixtures/json/before.json', 'fixtures/json/after.json', 'fixtures/json/resultJsonDiff'],
-  ['YML', 'fixtures/yml/before.yml', 'fixtures/yml/after.yml', 'fixtures/yml/resultYmlDiff'],
-  ['INI', 'fixtures/ini/before.ini', 'fixtures/ini/after.ini', 'fixtures/ini/resultIniDiff'],
+  ['JSON', '__fixtures__/json/before.json', '__fixtures__/json/after.json', '__fixtures__/json/resultJsonDiff'],
+  ['YML', '__fixtures__/yml/before.yml', '__fixtures__/yml/after.yml', '__fixtures__/yml/resultYmlDiff'],
+  ['INI', '__fixtures__/ini/before.ini', '__fixtures__/ini/after.ini', '__fixtures__/ini/resultIniDiff'],
 ])('config diff', (name, before, after, result) => {
   test(name, () => {
     const beforeData = getData(getPath(before));
