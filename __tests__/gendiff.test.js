@@ -20,6 +20,6 @@ describe.each([
     const beforeData = getData(getPath(before));
     const afterData = getData(getPath(after));
     const resultData = getResult(getPath(result));
-    expect(genDiff(beforeData, afterData)).toBe(resultData);
+    expect(genDiff(beforeData, afterData).trim()).toBe(resultData.trim());
   });
 });
