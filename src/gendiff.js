@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
-export default (dataBefore, dataAfter) => {
-  let diff = '';
+const data = (dataBefore, dataAfter) => {
+  const diff = '';
 
   const keys = [...new Set([...Object.keys(dataBefore), ...Object.keys(dataAfter)])];
 
@@ -18,6 +18,10 @@ export default (dataBefore, dataAfter) => {
     };
 
     if (isBefore && isAfter) {
+      if (typeof beforeValue === 'object' && typeof afterValue === 'object') {
+        // return `${key}: ${data(beforeValue, afterValue)}`;
+        return data(beforeValue, afterValue);
+      }
       item.available = 'both';
       item.equal = beforeValue === afterValue;
     } else {
@@ -29,3 +33,5 @@ export default (dataBefore, dataAfter) => {
 
   return structure || `{\n${diff}\n}`;
 };
+
+export default data;
