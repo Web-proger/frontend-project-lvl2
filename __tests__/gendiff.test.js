@@ -21,9 +21,9 @@ describe.each([
   test(name, () => {
     const beforeData = getData(getPath(before));
     const afterData = getData(getPath(after));
-    const resultData = getResult(getPath(result));
     const internalView = genDiff(beforeData, afterData);
     const diff = `{\n${stylish(beforeData, afterData, internalView).trimRight()}\n}`;
-    expect(diff).toBe(resultData.trim());
+    const resultData = getResult(getPath(result)).trim();
+    expect(diff).toBe(resultData);
   });
 });
