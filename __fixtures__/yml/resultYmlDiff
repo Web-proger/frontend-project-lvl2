@@ -1,8 +1,8 @@
 {
     format: yml
-  - timeout: 100
-  + timeout: 120
   - revision: v1
   + revision: v2
   + step: 5
+  - timeout: 100
+  + timeout: 120
 }
