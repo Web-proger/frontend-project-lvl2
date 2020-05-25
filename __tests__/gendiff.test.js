@@ -3,10 +3,9 @@ import fs from 'fs';
 import path from 'path';
 import genDiff from '../src/gendiff';
 import parsers from '../src/parsers';
-import stylish from '../src/stylish';
 
 // TODO вынести в отдельный модуль, тестирование parser
-// TODO Сделать общай тест, где будут всё модули за раз
+// TODO Сделать общиай тест, где будут всё модули за раз
 const pwd = process.cwd();
 const getPath = (currentPath) => path.join(pwd, currentPath);
 const getResult = (resultPath) => fs.readFileSync(resultPath, 'utf-8');
@@ -21,8 +20,7 @@ describe.each([
   test(name, () => {
     const beforeData = getData(getPath(before));
     const afterData = getData(getPath(after));
-    const internalView = genDiff(beforeData, afterData);
-    const diff = `{\n${stylish(beforeData, afterData, internalView).trimRight()}\n}`;
+    const diff = genDiff(beforeData, afterData);
     const resultData = getResult(getPath(result)).trim();
     expect(diff).toBe(resultData);
   });
