@@ -44,7 +44,7 @@ const getValue = (obj, depth) => {
 const isObject = (obj) => typeof obj === 'object';
 
 // Формируем строку для визуального отображения diff
-const getVision = (dataBefore, dataAfter, structure, depth = 0) => {
+const stylish = (dataBefore, dataAfter, structure, depth = 0) => {
   let diff = '';
   const keys = Object.keys(structure).sort();
 
@@ -74,19 +74,21 @@ const getVision = (dataBefore, dataAfter, structure, depth = 0) => {
     }
 
     if (!available && !equal) {
-      diff += `${'    '.repeat(depth + 1)}${key}: {\n${getVision(beforeVal, afterVal, structure[key], depth + 1)}${'    '.repeat(depth + 1)}}\n`;
+      diff += `${'    '.repeat(depth + 1)}${key}: {\n${stylish(beforeVal, afterVal, structure[key], depth + 1)}${'    '.repeat(depth + 1)}}\n`;
     }
   });
 
   return diff;
 };
 
-export default (dataBefore, dataAfter, stylish = 'stylish') => {
+export default (dataBefore, dataAfter, formatter = 'stylish') => {
   const structure = getStructure(dataBefore, dataAfter);
   let diff;
-  if (stylish === 'stylish') {
-    diff = getVision(dataBefore, dataAfter, structure).trimRight();
+  if (formatter === 'stylish') {
+    diff = stylish(dataBefore, dataAfter, structure).trimRight();
     diff = `{\n${diff}\n}`;
+  } else {
+    diff = `неизвестный формат "${formatter}"`;
   }
   return diff;
 };
