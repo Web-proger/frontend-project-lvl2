@@ -25,6 +25,6 @@ const dataAfter = parsers(fs.readFileSync(path2, 'utf8'), path.extname(path2));
 
 const diff = genDiff(dataBefore, dataAfter);
 
-const visual = stylish(dataBefore, dataAfter, diff);
+const visual = stylish(dataBefore, dataAfter, diff).trimRight();
 
 console.log(`{\n${visual}\n}`);

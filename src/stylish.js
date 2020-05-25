@@ -34,7 +34,7 @@ const getDiff = (dataBefore, dataAfter, structure, depth = 0) => {
     }
 
     if (!available && !equal) {
-      diff += `${'    '.repeat(depth + 1)}${key}:\n${getDiff(dataBefore[key], dataAfter[key], structure[key], depth + 1)}`;
+      diff += `${'    '.repeat(depth + 1)}${key}: {\n${getDiff(dataBefore[key], dataAfter[key], structure[key], depth + 1)}${'    '.repeat(depth + 1)}}\n`;
     }
   });
 
