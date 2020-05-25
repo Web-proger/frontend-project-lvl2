@@ -1,5 +1,6 @@
 import _ from 'lodash';
 
+// Получаем структуру дифа
 const getStructure = (dataBefore, dataAfter) => {
   const keys = [...new Set([...Object.keys(dataBefore), ...Object.keys(dataAfter)])].sort();
 
@@ -31,6 +32,7 @@ const getStructure = (dataBefore, dataAfter) => {
   }, {});
 };
 
+// Получаем отображение элементов, которые уже не нужно сравнивать
 const getValue = (obj, depth) => {
   const string = Object.keys(obj).reduce((acc, key) => {
     const value = typeof obj[key] === 'object' ? getValue(obj[key], depth + 1) : obj[key];
@@ -39,35 +41,40 @@ const getValue = (obj, depth) => {
   return `{\n${string}${'    '.repeat(depth)}}`;
 };
 
+const isObject = (obj) => typeof obj === 'object';
+
+// Формируем строку для визуального отображения diff
 const getVision = (dataBefore, dataAfter, structure, depth = 0) => {
   let diff = '';
   const keys = Object.keys(structure).sort();
 
   keys.forEach((key) => {
     const { available, equal } = structure[key];
+    const beforeVal = dataBefore[key];
+    const afterVal = dataAfter[key];
 
     if (available === 'before') {
-      const value = typeof dataBefore[key] === 'object' ? getValue(dataBefore[key], depth + 1) : dataBefore[key];
+      const value = isObject(beforeVal) ? getValue(beforeVal, depth + 1) : beforeVal;
       diff = diff.concat(`${'    '.repeat(depth)}  - ${key}: ${value}\n`);
     }
 
     if (available === 'after') {
-      const value = typeof dataAfter[key] === 'object' ? getValue(dataAfter[key], depth + 1) : dataAfter[key];
+      const value = isObject(afterVal) ? getValue(afterVal, depth + 1) : afterVal;
       diff = diff.concat(`${'    '.repeat(depth)}  + ${key}: ${value}\n`);
     }
 
     if (available === 'both') {
       if (equal === true) {
-        diff = diff.concat(`${'    '.repeat(depth + 1)}${key}: ${dataBefore[key]}\n`);
+        diff = diff.concat(`${'    '.repeat(depth + 1)}${key}: ${beforeVal}\n`);
       } else {
-        const valueBefore = typeof dataBefore[key] === 'object' ? getValue(dataBefore[key], depth + 1) : dataBefore[key];
-        const valueAfter = typeof dataAfter[key] === 'object' ? getValue(dataAfter[key], depth + 1) : dataAfter[key];
-        diff = diff.concat(`${'    '.repeat(depth)}  - ${key}: ${valueBefore}\n${'    '.repeat(depth)}  + ${key}: ${valueAfter}\n`);
+        const strBefore = isObject(beforeVal) ? getValue(beforeVal, depth + 1) : beforeVal;
+        const strAfter = isObject(afterVal) ? getValue(afterVal, depth + 1) : afterVal;
+        diff = diff.concat(`${'    '.repeat(depth)}  - ${key}: ${strBefore}\n${'    '.repeat(depth)}  + ${key}: ${strAfter}\n`);
       }
     }
 
     if (!available && !equal) {
-      diff += `${'    '.repeat(depth + 1)}${key}: {\n${getVision(dataBefore[key], dataAfter[key], structure[key], depth + 1)}${'    '.repeat(depth + 1)}}\n`;
+      diff += `${'    '.repeat(depth + 1)}${key}: {\n${getVision(beforeVal, afterVal, structure[key], depth + 1)}${'    '.repeat(depth + 1)}}\n`;
     }
   });
 
