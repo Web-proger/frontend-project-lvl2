@@ -8,7 +8,7 @@ const getValue = (obj, depth) => {
 
 const getDiff = (dataBefore, dataAfter, structure, depth = 0) => {
   let diff = '';
-  const keys = Object.keys(structure);
+  const keys = Object.keys(structure).sort();
 
   keys.forEach((key) => {
     const { available, equal } = structure[key];

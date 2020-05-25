@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 const data = (dataBefore, dataAfter) => {
-  const keys = [...new Set([...Object.keys(dataBefore), ...Object.keys(dataAfter)])];
+  const keys = [...new Set([...Object.keys(dataBefore), ...Object.keys(dataAfter)])].sort();
 
   return keys.reduce((acc, key) => {
     const isBefore = _.has(dataBefore, key);
