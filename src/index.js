@@ -6,8 +6,6 @@ import genDiff from './gendiff';
 import parsers from './parsers';
 import stylish from './stylish';
 
-import util from 'util';
-
 program
   .version('0.0.1')
   .description('Compares two configuration files and shows a difference.')
@@ -26,10 +24,6 @@ const dataBefore = parsers(fs.readFileSync(path1, 'utf8'), path.extname(path1));
 const dataAfter = parsers(fs.readFileSync(path2, 'utf8'), path.extname(path2));
 
 const diff = genDiff(dataBefore, dataAfter);
-
-console.log(util.inspect(diff, {
-  depth: 4,
-}));
 
 const visual = stylish(dataBefore, dataAfter, diff);
 
