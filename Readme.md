@@ -25,4 +25,4 @@ gendiff ../config/first.json ../config/last.json
 ```
 
 ## Демонстрация работы
-[demo (click me)](https://asciinema.org/a/M6UU4qXlGw5axJ39ePWSCWuBo)
+[demo (click me)](https://asciinema.org/a/NU2iZyyvKNR1JS6M9DD6kHUyp)
