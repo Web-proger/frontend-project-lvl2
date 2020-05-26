@@ -25,3 +25,11 @@ describe.each([
     expect(diff).toBe(resultData);
   });
 });
+
+test('plain', () => {
+  const beforeData = getData(getPath('__fixtures__/treeBefore.json'));
+  const afterData = getData(getPath('__fixtures__/treeAfter.json'));
+  const diff = genDiff(beforeData, afterData, 'plain');
+  const resultData = getResult(getPath('__fixtures__/plainJsonDiff')).trim();
+  expect(diff).toBe(resultData);
+});
