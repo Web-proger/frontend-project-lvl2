@@ -31,7 +31,7 @@ const plain = (before, after, structure, name = []) => {
 
     if (!available && !equal) {
       const value = plain(beforeVal, afterVal, structure[key], path);
-      diff = diff.concat(value);
+      diff = diff.concat(value, '\n');
     }
   });
 
