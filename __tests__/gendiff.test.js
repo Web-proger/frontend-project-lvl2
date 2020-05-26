@@ -16,7 +16,7 @@ describe.each([
   ['YML', '__fixtures__/before.yml', '__fixtures__/after.yml', '__fixtures__/resultDiff'],
   ['INI', '__fixtures__/before.ini', '__fixtures__/after.ini', '__fixtures__/resultDiff'],
   ['JSON-TREE', '__fixtures__/treeBefore.json', '__fixtures__/treeAfter.json', '__fixtures__/treeJsonDiff'],
-])('config diff', (name, before, after, result) => {
+])('Stylish', (name, before, after, result) => {
   test(name, () => {
     const beforeData = getData(getPath(before));
     const afterData = getData(getPath(after));
@@ -26,10 +26,14 @@ describe.each([
   });
 });
 
-test('plain', () => {
-  const beforeData = getData(getPath('__fixtures__/treeBefore.json'));
-  const afterData = getData(getPath('__fixtures__/treeAfter.json'));
-  const diff = genDiff(beforeData, afterData, 'plain');
-  const resultData = getResult(getPath('__fixtures__/plainJsonDiff')).trim();
-  expect(diff).toBe(resultData);
+describe.each([
+  ['JSON-TREE', '__fixtures__/treeBefore.json', '__fixtures__/treeAfter.json', '__fixtures__/plainJsonDiff'],
+])('Plain', (name, before, after, result) => {
+  test(name, () => {
+    const beforeData = getData(getPath(before));
+    const afterData = getData(getPath(after));
+    const diff = genDiff(beforeData, afterData, 'plain');
+    const resultData = getResult(getPath(result)).trim();
+    expect(diff).toBe(resultData);
+  });
 });
