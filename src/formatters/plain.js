@@ -18,7 +18,7 @@ const plain = (before, after, structure, name = []) => {
     }
 
     if (available === 'after') {
-      const value = `Property ${pathStr} was added with value: ${isObject(afterVal) ? '[complex value]' : afterVal}`;
+      const value = `Property ${pathStr} was added with value: ${isObject(afterVal) ? '[complex value]' : afterVal}\n`;
       diff = diff.concat(value);
     }
 
@@ -30,15 +30,12 @@ const plain = (before, after, structure, name = []) => {
     }
 
     if (!available && !equal) {
-      const value = `${plain(beforeVal, afterVal, structure[key], path)}\n`;
+      const value = plain(beforeVal, afterVal, structure[key], path);
       diff = diff.concat(value);
     }
   });
 
-  return diff;
+  return diff.trim();
 };
 
-export default (dataBefore, dataAfter, structure) => {
-  const diff = plain(dataBefore, dataAfter, structure);
-  return diff;
-};
+export default (dataBefore, dataAfter, structure) => plain(dataBefore, dataAfter, structure);
