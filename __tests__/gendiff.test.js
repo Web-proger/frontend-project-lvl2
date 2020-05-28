@@ -37,3 +37,15 @@ describe.each([
     expect(diff).toBe(resultData);
   });
 });
+
+describe.each([
+  ['JSON-TREE', '__fixtures__/treeBefore.json', '__fixtures__/treeAfter.json', '__fixtures__/resultJsonView'],
+])('json', (name, before, after, result) => {
+  test(name, () => {
+    const beforeData = getData(getPath(before));
+    const afterData = getData(getPath(after));
+    const diff = genDiff(beforeData, afterData, 'json');
+    const resultData = getResult(getPath(result)).trim();
+    expect(diff).toBe(resultData);
+  });
+});
