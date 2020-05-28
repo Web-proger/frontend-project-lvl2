@@ -22,16 +22,14 @@ const plain = (before, after, structure, name = []) => {
       diff = diff.concat(value);
     }
 
-    if (available === 'both') {
-      if (equal !== true) {
-        const value = `Property ${pathStr} was changed from: ${isObject(beforeVal) ? '[complex value]' : beforeVal} to ${isObject(afterVal) ? '[complex value]' : afterVal}\n`;
-        diff = diff.concat(value);
-      }
+    if (available === 'both' && !equal) {
+      const value = `Property ${pathStr} was changed from: ${isObject(beforeVal) ? '[complex value]' : beforeVal} to ${isObject(afterVal) ? '[complex value]' : afterVal}\n`;
+      diff = diff.concat(value);
     }
 
     if (!available && !equal) {
-      const value = plain(beforeVal, afterVal, structure[key], path);
-      diff = diff.concat(value, '\n');
+      const value = `${plain(beforeVal, afterVal, structure[key], path)}\n`;
+      diff = diff.concat(value);
     }
   });
 

@@ -12,29 +12,26 @@ const json = (dataBefore, dataAfter, structure, name = []) => {
     const path = name.slice();
     path.push(key);
 
-    const item = {
-      status: null,
-      oldValue: null,
-      newValue: null,
+    const getValue = (value) => (isObject(value) ? Object.assign(value) : value);
+
+    const setData = (status, oldValue, newValue) => {
+      _.set(acc, path, {
+        status,
+        oldValue,
+        newValue,
+      });
     };
 
     if (available === 'before') {
-      item.status = 'deleted';
-      item.oldValue = isObject(beforeVal) ? Object.assign(beforeVal) : beforeVal;
-      _.set(acc, path, Object.assign(item));
+      setData('deleted', getValue(beforeVal), null);
     }
 
     if (available === 'after') {
-      item.status = 'added';
-      item.newValue = isObject(afterVal) ? Object.assign(afterVal) : afterVal;
-      _.set(acc, path, Object.assign(item));
+      setData('added', null, getValue(afterVal));
     }
 
     if (available === 'both' && equal === false) {
-      item.status = 'changed';
-      item.oldValue = isObject(beforeVal) ? Object.assign(beforeVal) : beforeVal;
-      item.newValue = isObject(afterVal) ? Object.assign(afterVal) : afterVal;
-      _.set(acc, path, Object.assign(item));
+      setData('changed', getValue(beforeVal), getValue(afterVal));
     }
 
     if (!available && !equal) {
