@@ -12,10 +12,10 @@ const getResult = (resultPath) => fs.readFileSync(resultPath, 'utf-8');
 const getData = (filePath) => parsers(fs.readFileSync(filePath, 'utf8'), path.extname(filePath));
 
 describe.each([
-  ['JSON', '__fixtures__/before.json', '__fixtures__/after.json', '__fixtures__/resultDiff'],
-  ['YML', '__fixtures__/before.yml', '__fixtures__/after.yml', '__fixtures__/resultDiff'],
-  ['INI', '__fixtures__/before.ini', '__fixtures__/after.ini', '__fixtures__/resultDiff'],
-  ['JSON-TREE', '__fixtures__/treeBefore.json', '__fixtures__/treeAfter.json', '__fixtures__/treeJsonDiff'],
+  ['JSON flat', '__fixtures__/before.json', '__fixtures__/after.json', '__fixtures__/stylishFlattDiff'],
+  ['YML flat', '__fixtures__/before.yml', '__fixtures__/after.yml', '__fixtures__/stylishFlattDiff'],
+  ['INI flat', '__fixtures__/before.ini', '__fixtures__/after.ini', '__fixtures__/stylishFlattDiff'],
+  ['JSON tree', '__fixtures__/treeBefore.json', '__fixtures__/treeAfter.json', '__fixtures__/treeStylishDiff'],
 ])('Stylish', (name, before, after, result) => {
   test(name, () => {
     const beforeData = getData(getPath(before));
@@ -27,7 +27,7 @@ describe.each([
 });
 
 describe.each([
-  ['JSON-TREE', '__fixtures__/treeBefore.json', '__fixtures__/treeAfter.json', '__fixtures__/plainJsonDiff'],
+  ['Plain tree', '__fixtures__/treeBefore.json', '__fixtures__/treeAfter.json', '__fixtures__/plainDiff'],
 ])('Plain', (name, before, after, result) => {
   test(name, () => {
     const beforeData = getData(getPath(before));
@@ -39,7 +39,7 @@ describe.each([
 });
 
 describe.each([
-  ['JSON-TREE', '__fixtures__/treeBefore.json', '__fixtures__/treeAfter.json', '__fixtures__/resultJsonView'],
+  ['JSON tree', '__fixtures__/treeBefore.json', '__fixtures__/treeAfter.json', '__fixtures__/jsonDiff'],
 ])('json', (name, before, after, result) => {
   test(name, () => {
     const beforeData = getData(getPath(before));
