@@ -1,13 +1,14 @@
-const isObject = (obj) => typeof obj === 'object';
-
 // Получаем отображение элементов, которые уже не нужно сравнивать
-const getValue = (obj, depth) => {
+const objToStr = (obj, depth) => {
   const string = Object.keys(obj).reduce((acc, key) => {
-    const value = typeof obj[key] === 'object' ? getValue(obj[key], depth + 1) : obj[key];
+    const value = typeof obj[key] === 'object' ? objToStr(obj[key], depth + 1) : obj[key];
     return acc.concat(`${'    '.repeat(depth)}    ${key}: ${value}\n`);
   }, '');
   return `{\n${string}${'    '.repeat(depth)}}`;
 };
+
+const getValue = (value, depth) => (typeof value === 'object' ? objToStr(value, depth) : value);
+const indent = (depth) => '    '.repeat(depth);
 
 // Формируем строку для визуального отображения diff
 const stylish = (dataBefore, dataAfter, structure, depth) => {
@@ -20,27 +21,23 @@ const stylish = (dataBefore, dataAfter, structure, depth) => {
     const afterVal = dataAfter[key];
 
     if (available === 'before') {
-      const value = isObject(beforeVal) ? getValue(beforeVal, depth + 1) : beforeVal;
-      diff = diff.concat(`${'    '.repeat(depth)}  - ${key}: ${value}\n`);
+      diff = diff.concat(`${indent(depth)}  - ${key}: ${getValue(beforeVal, depth + 1)}\n`);
     }
 
     if (available === 'after') {
-      const value = isObject(afterVal) ? getValue(afterVal, depth + 1) : afterVal;
-      diff = diff.concat(`${'    '.repeat(depth)}  + ${key}: ${value}\n`);
+      diff = diff.concat(`${indent(depth)}  + ${key}: ${getValue(afterVal, depth + 1)}\n`);
     }
 
     if (available === 'both') {
       if (equal === true) {
-        diff = diff.concat(`${'    '.repeat(depth + 1)}${key}: ${beforeVal}\n`);
+        diff = diff.concat(`${indent(depth + 1)}${key}: ${beforeVal}\n`);
       } else {
-        const strBefore = isObject(beforeVal) ? getValue(beforeVal, depth + 1) : beforeVal;
-        const strAfter = isObject(afterVal) ? getValue(afterVal, depth + 1) : afterVal;
-        diff = diff.concat(`${'    '.repeat(depth)}  - ${key}: ${strBefore}\n${'    '.repeat(depth)}  + ${key}: ${strAfter}\n`);
+        diff = diff.concat(`${indent(depth)}  - ${key}: ${getValue(beforeVal, depth + 1)}\n${indent(depth)}  + ${key}: ${getValue(afterVal, depth + 1)}\n`);
       }
     }
 
     if (!available && !equal) {
-      diff += `${'    '.repeat(depth + 1)}${key}: {\n${stylish(beforeVal, afterVal, structure[key], depth + 1)}${'    '.repeat(depth + 1)}}\n`;
+      diff += `${indent(depth + 1)}${key}: {\n${stylish(beforeVal, afterVal, structure[key], depth + 1)}${indent(depth + 1)}}\n`;
     }
   });
 
