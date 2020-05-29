@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 const isObject = (obj) => typeof obj === 'object';
+const getValue = (value) => (isObject(value) ? { ...value } : value);
 
 const json = (dataBefore, dataAfter, structure, name = []) => {
   const keys = [...new Set([...Object.keys(dataBefore), ...Object.keys(dataAfter)])].sort();
@@ -11,8 +12,6 @@ const json = (dataBefore, dataAfter, structure, name = []) => {
     const afterVal = dataAfter[key];
     const path = name.slice();
     path.push(key);
-
-    const getValue = (value) => (isObject(value) ? Object.assign(value) : value);
 
     const setData = (status, oldValue, newValue) => {
       _.set(acc, path, {

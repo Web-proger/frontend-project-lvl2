@@ -1,4 +1,5 @@
 const isObject = (obj) => typeof obj === 'object';
+const getValue = (value) => (isObject(value) ? '[complex value]' : value);
 
 const plain = (before, after, structure, name = []) => {
   let diff = '';
@@ -11,26 +12,25 @@ const plain = (before, after, structure, name = []) => {
     const path = name.slice();
     path.push(key);
     const pathStr = `'${path.join('.')}'`;
+    let value = '';
 
     if (available === 'before') {
-      const value = `Property ${pathStr} was deleted\n`;
-      diff = diff.concat(value);
+      value = `Property ${pathStr} was deleted\n`;
     }
 
     if (available === 'after') {
-      const value = `Property ${pathStr} was added with value: ${isObject(afterVal) ? '[complex value]' : afterVal}\n`;
-      diff = diff.concat(value);
+      value = `Property ${pathStr} was added with value: ${getValue(afterVal)}\n`;
     }
 
     if (available === 'both' && !equal) {
-      const value = `Property ${pathStr} was changed from: ${isObject(beforeVal) ? '[complex value]' : beforeVal} to ${isObject(afterVal) ? '[complex value]' : afterVal}\n`;
-      diff = diff.concat(value);
+      value = `Property ${pathStr} was changed from: ${getValue(beforeVal)} to ${getValue(afterVal)}\n`;
     }
 
     if (!available && !equal) {
-      const value = `${plain(beforeVal, afterVal, structure[key], path)}\n`;
-      diff = diff.concat(value);
+      value = `${plain(beforeVal, afterVal, structure[key], path)}\n`;
     }
+
+    diff = diff.concat(value);
   });
 
   return diff.trim();
