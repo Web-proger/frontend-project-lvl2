@@ -1,7 +1,6 @@
 import _ from 'lodash';
 
-const isObject = (obj) => typeof obj === 'object';
-const getValue = (value) => (isObject(value) ? { ...value } : value);
+const getValue = (value) => (typeof value === 'object' ? { ...value } : value);
 
 const json = (dataBefore, dataAfter, structure, name = []) => {
   const keys = [...new Set([...Object.keys(dataBefore), ...Object.keys(dataAfter)])].sort();
