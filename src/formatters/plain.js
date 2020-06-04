@@ -7,8 +7,7 @@ const plain = (before, after, structure, name = []) => {
     const { available, equal } = structure[key];
     const beforeVal = before[key];
     const afterVal = after[key];
-    const path = name.slice();
-    path.push(key);
+    const path = [...name, key];
     const pathStr = `'${path.join('.')}'`;
 
     if (available === 'before') {
