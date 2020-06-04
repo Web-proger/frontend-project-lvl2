@@ -1,5 +1,8 @@
 import _ from 'lodash';
+import path from 'path';
+import fs from 'fs';
 import formatter from './formatters';
+import parsers from './parsers';
 
 // Получаем структуру дифа
 const getStructure = (dataBefore, dataAfter) => {
@@ -33,7 +36,12 @@ const getStructure = (dataBefore, dataAfter) => {
   }, {});
 };
 
-export default (dataBefore, dataAfter, format = 'stylish') => {
+export default (firstConfig, secondConfig, format = 'stylish') => {
+  const path1 = path.resolve(firstConfig);
+  const path2 = path.resolve(secondConfig);
+  const dataBefore = parsers(fs.readFileSync(path1, 'utf8'), path.extname(path1));
+  const dataAfter = parsers(fs.readFileSync(path2, 'utf8'), path.extname(path2));
+
   const structure = getStructure(dataBefore, dataAfter);
   return formatter(dataBefore, dataAfter, structure, format);
 };
