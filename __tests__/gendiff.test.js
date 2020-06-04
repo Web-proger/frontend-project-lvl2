@@ -10,9 +10,9 @@ const getResult = (resultPath) => fs.readFileSync(resultPath, 'utf-8');
 const getData = (filePath) => parsers(fs.readFileSync(filePath, 'utf8'), path.extname(filePath));
 
 describe.each([
-  ['JSON tree', '__fixtures__/before.json', '__fixtures__/after.json', '__fixtures__/treeStylishDiff'],
-  ['YML flat', '__fixtures__/before.yml', '__fixtures__/after.yml', '__fixtures__/treeStylishDiff'],
-  ['INI flat', '__fixtures__/before.ini', '__fixtures__/after.ini', '__fixtures__/stylishFlattDiff'],
+  ['JSON', '__fixtures__/before.json', '__fixtures__/after.json', '__fixtures__/diffStylish'],
+  ['YML', '__fixtures__/before.yml', '__fixtures__/after.yml', '__fixtures__/diffStylish'],
+  ['INI', '__fixtures__/before.ini', '__fixtures__/after.ini', '__fixtures__/diffStylish'],
 ])('Stylish', (name, before, after, result) => {
   test(name, () => {
     const beforeData = getData(path.resolve(before));
@@ -24,7 +24,7 @@ describe.each([
 });
 
 describe.each([
-  ['Plain tree', '__fixtures__/before.json', '__fixtures__/after.json', '__fixtures__/plainDiff'],
+  ['Plain', '__fixtures__/before.json', '__fixtures__/after.json', '__fixtures__/diffPlain'],
 ])('Plain', (name, before, after, result) => {
   test(name, () => {
     const beforeData = getData(path.resolve(before));
@@ -36,7 +36,7 @@ describe.each([
 });
 
 describe.each([
-  ['JSON tree', '__fixtures__/before.json', '__fixtures__/after.json', '__fixtures__/jsonDiff'],
+  ['JSON', '__fixtures__/before.json', '__fixtures__/after.json', '__fixtures__/diffJson'],
 ])('json', (name, before, after, result) => {
   test(name, () => {
     const beforeData = getData(path.resolve(before));
