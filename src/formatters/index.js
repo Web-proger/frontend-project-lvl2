@@ -3,14 +3,14 @@ import plain from './plain';
 import json from './json';
 
 export default (dataBefore, dataAfter, structure, format) => {
-  if (format === 'stylish') {
-    return stylish(dataBefore, dataAfter, structure);
+  switch (format) {
+    case 'stylish':
+      return stylish(dataBefore, dataAfter, structure);
+    case 'plain':
+      return plain(dataBefore, dataAfter, structure);
+    case 'json':
+      return json(dataBefore, dataAfter, structure);
+    default:
+      throw new Error(`Unknown format "${format}", specify one of the formats: "stylish", "plain", "json".`);
   }
-  if (format === 'plain') {
-    return plain(dataBefore, dataAfter, structure);
-  }
-  if (format === 'json') {
-    return json(dataBefore, dataAfter, structure);
-  }
-  return `Unknown format "${format}", specify one of the formats: "stylish", "plain", "json".`;
 };

@@ -13,4 +13,6 @@ export default (data, ext) => {
   if (ext === 'json') {
     return JSON.parse(data);
   }
+
+  throw new Error('Неизвестный формат файла');
 };
