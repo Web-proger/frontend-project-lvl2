@@ -2,13 +2,15 @@ import yaml from 'js-yaml';
 import ini from 'ini';
 
 export default (data, ext) => {
-  if (ext === '.yml') {
+  if (ext === 'yml') {
     return yaml.safeLoad(data);
   }
 
-  if (ext === '.ini') {
+  if (ext === 'ini') {
     return ini.parse(data);
   }
 
-  return JSON.parse(data);
+  if (ext === 'json') {
+    return JSON.parse(data);
+  }
 };
