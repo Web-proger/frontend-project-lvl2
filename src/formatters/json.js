@@ -3,7 +3,8 @@ import _ from 'lodash';
 const getValue = (value) => (typeof value === 'object' ? { ...value } : value);
 
 const json = (dataBefore, dataAfter, structure, name = []) => {
-  const keys = [...new Set([...Object.keys(dataBefore), ...Object.keys(dataAfter)])].sort();
+  // Уникальные ключи из 2х массивов, отсортированные по алфавиту.
+  const keys = _.union(_.keys(dataBefore), _.keys(dataAfter)).sort();
 
   return keys.reduce((acc, key) => {
     const { available, equal } = structure[key];
