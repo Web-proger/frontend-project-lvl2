@@ -11,11 +11,11 @@ test.each([
   ['stylish', 'INI', 'before.ini', 'after.ini', 'diffStylish'],
   ['plain', 'JSON', 'before.json', 'after.json', 'diffPlain'],
   ['json', 'JSON', 'before.json', 'after.json', 'diffJson'],
-])('[Формат: %s, Тип файла: %s])', (format, dataType, before, after, result) => {
-  const beforeData = getAbsPath(before);
-  const afterData = getAbsPath(after);
+])('[Format: %s, File type: %s])', (format, dataType, before, after, result) => {
+  const beforePath = getAbsPath(before);
+  const afterPath = getAbsPath(after);
   const resultData = fs.readFileSync(getAbsPath(result), 'utf-8').trim();
-  const diff = genDiff(beforeData, afterData, format);
+  const diff = genDiff(beforePath, afterPath, format);
 
   expect(diff).toBe(resultData);
 });
