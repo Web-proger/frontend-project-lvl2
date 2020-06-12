@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import path from 'path';
 import fs from 'fs';
-import formatter from './formatters';
-import parsers from './parsers';
+import format from './formatters';
+import getJson from './parsers';
 
 // Получаем структуру дифа
 const getStructure = (dataBefore, dataAfter) => {
@@ -39,7 +39,7 @@ const getStructure = (dataBefore, dataAfter) => {
 // Получаем расширение файла
 const getExt = (filePath) => path.extname(filePath).split('.')[1] || '';
 
-export default (firstConfig, secondConfig, format = 'stylish') => {
+export default (firstConfig, secondConfig, formatType = 'stylish') => {
   // Обсалютные пути до конфигов
   const beforePath = path.resolve(firstConfig);
   const afterPath = path.resolve(secondConfig);
@@ -48,9 +48,9 @@ export default (firstConfig, secondConfig, format = 'stylish') => {
   const afterExt = getExt(afterPath);
 
   // Данные из конфигов в виде JSON
-  const dataBefore = parsers(fs.readFileSync(beforePath, 'utf8'), beforeExt);
-  const dataAfter = parsers(fs.readFileSync(afterPath, 'utf8'), afterExt);
+  const dataBefore = getJson(fs.readFileSync(beforePath, 'utf8'), beforeExt);
+  const dataAfter = getJson(fs.readFileSync(afterPath, 'utf8'), afterExt);
 
   const structure = getStructure(dataBefore, dataAfter);
-  return formatter(dataBefore, dataAfter, structure, format);
+  return format(dataBefore, dataAfter, structure, formatType);
 };
