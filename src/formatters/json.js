@@ -10,8 +10,7 @@ const json = (dataBefore, dataAfter, structure, name = []) => {
     const { available, equal } = structure[key];
     const beforeVal = dataBefore[key];
     const afterVal = dataAfter[key];
-    const path = name.slice();
-    path.push(key);
+    const path = [...name, key];
 
     const setData = (status, oldValue, newValue) => {
       _.set(acc, path, {
