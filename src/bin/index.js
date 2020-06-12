@@ -8,8 +8,12 @@ program
   .option('-f, --format [type]', 'output format', 'stylish')
   .arguments('<firstConfig> <secondConfig>')
   .action((firstConfig, secondConfig) => {
-    const diff = genDiff(firstConfig, secondConfig, program.format);
-    console.log(diff);
+    try {
+      const diff = genDiff(firstConfig, secondConfig, program.format);
+      console.log(diff);
+    } catch (e) {
+      console.log(e.message);
+    }
   });
 
 program.parse(process.argv);
