@@ -1,10 +1,10 @@
 {
   "name": "frontend-project-lvl2",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "Вычислитель отличий",
   "main": "dist/index.js",
   "bin": {
-    "gendiff": "dist/index.js"
+    "gendiff": "dist/bin/index.js"
   },
   "files": [
     "dist"
