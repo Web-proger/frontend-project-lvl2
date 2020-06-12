@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals';
 import fs from 'fs';
 import path from 'path';
-import genDiff from '../src/gendiff';
+import genDiff from '../src';
 
 const getAbsPath = (fileName) => path.join(process.cwd(), '__fixtures__', fileName);
 

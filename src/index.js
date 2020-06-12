@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import path from 'path';
 import fs from 'fs';
-import format from '../formatters';
-import getJson from '../parsers';
+import format from './formatters';
+import getJson from './parsers';
 
 // Получаем структуру дифа
 const getStructure = (dataBefore, dataAfter) => {

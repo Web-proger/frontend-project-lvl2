@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { program } from 'commander';
-import genDiff from '../gendiff';
+import genDiff from '..';
 
 program
   .version('0.0.5')
