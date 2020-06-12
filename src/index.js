@@ -6,7 +6,7 @@ import getJson from './parsers';
 
 // Получаем структуру дифа
 const getStructure = (dataBefore, dataAfter) => {
-  const keys = [...new Set([...Object.keys(dataBefore), ...Object.keys(dataAfter)])].sort();
+  const keys = _.union(_.keys(dataBefore), _.keys(dataAfter)).sort();
 
   return keys.reduce((acc, key) => {
     const isBefore = _.has(dataBefore, key);
