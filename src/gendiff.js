@@ -36,11 +36,20 @@ const getStructure = (dataBefore, dataAfter) => {
   }, {});
 };
 
+// Получаем расширение файла
+const getExt = (filePath) => path.extname(filePath).split('.')[1] || '';
+
 export default (firstConfig, secondConfig, format = 'stylish') => {
-  const path1 = path.resolve(firstConfig);
-  const path2 = path.resolve(secondConfig);
-  const dataBefore = parsers(fs.readFileSync(path1, 'utf8'), path.extname(path1));
-  const dataAfter = parsers(fs.readFileSync(path2, 'utf8'), path.extname(path2));
+  // Обсалютные пути до конфигов
+  const beforePath = path.resolve(firstConfig);
+  const afterPath = path.resolve(secondConfig);
+  // Расширения файлов конфигов
+  const beforeExt = getExt(beforePath);
+  const afterExt = getExt(afterPath);
+
+  // Данные из конфигов в виде JSON
+  const dataBefore = parsers(fs.readFileSync(beforePath, 'utf8'), beforeExt);
+  const dataAfter = parsers(fs.readFileSync(afterPath, 'utf8'), afterExt);
 
   const structure = getStructure(dataBefore, dataAfter);
   return formatter(dataBefore, dataAfter, structure, format);
