@@ -12,5 +12,5 @@ export default (dataBefore, dataAfter, structure, format) => {
   if (format === 'json') {
     return json(dataBefore, dataAfter, structure);
   }
-  return `неизвестный формат "${format}", задайте один из следующих: "stylish", "plain", "json"`;
+  return `Unknown format "${format}", specify one of the formats: "stylish", "plain", "json".`;
 };
