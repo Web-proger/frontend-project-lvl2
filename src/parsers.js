@@ -14,5 +14,5 @@ export default (data, ext) => {
     return JSON.parse(data);
   }
 
-  throw new Error('Неизвестный формат файла');
+  throw new Error('Unknown file format');
 };
