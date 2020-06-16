@@ -12,8 +12,7 @@ const indent = (depth) => '    '.repeat(depth);
 
 // Формируем строку для визуального отображения diff
 const stylish = (dataBefore, dataAfter, structure, depth) => structure
-  .reduce((acc, item) => {
-    const [keyName, available, equal, children] = item;
+  .reduce((acc, [keyName, available, equal, children]) => {
     const beforeVal = dataBefore[keyName];
     const afterVal = dataAfter[keyName];
 
