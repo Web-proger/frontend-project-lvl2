@@ -14,26 +14,17 @@ const getStructure = (dataBefore, dataAfter) => {
     const beforeValue = dataBefore[key];
     const afterValue = dataAfter[key];
 
-    const item = {
-      available: '',
-      equal: null,
-    };
-
     if (isBefore && isAfter) {
       if (typeof beforeValue === 'object' && typeof afterValue === 'object') {
-        acc[key] = getStructure(beforeValue, afterValue);
-        return acc;
+        return [...acc, [key, 'both', false, getStructure(beforeValue, afterValue)]];
       }
 
-      item.available = 'both';
-      item.equal = beforeValue === afterValue;
-    } else {
-      item.available = isBefore ? 'before' : 'after';
+      const equal = beforeValue === afterValue;
+      return [...acc, [key, 'both', equal, []]];
     }
-    acc[key] = item;
-
-    return acc;
-  }, {});
+    const available = isBefore ? 'before' : 'after';
+    return [...acc, [key, available, false, []]];
+  }, []);
 };
 
 // Получаем расширение файла
