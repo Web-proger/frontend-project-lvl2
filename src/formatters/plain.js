@@ -18,9 +18,7 @@ const plain = (before, after, structure, name = []) => {
       case 'after':
         return acc.concat(`Property ${pathStr} was added with value: ${getValue(afterVal)}\n`);
       case 'both':
-        if (equal === false) {
-          return acc.concat(`Property ${pathStr} was changed from: ${getValue(beforeVal)} to ${getValue(afterVal)}\n`);
-        }
+        return (equal === false) ? acc.concat(`Property ${pathStr} was changed from: ${getValue(beforeVal)} to ${getValue(afterVal)}\n`) : acc;
       default:
         return acc;
     }

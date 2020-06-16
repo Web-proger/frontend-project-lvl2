@@ -2,8 +2,8 @@ import _ from 'lodash';
 
 const getValue = (value) => (typeof value === 'object' ? { ...value } : value);
 
-const json = (dataBefore, dataAfter, structure, name = []) => {
-  return structure.reduce((acc, item) => {
+const json = (dataBefore, dataAfter, structure, name = []) => structure
+  .reduce((acc, item) => {
     const [keyName, available, equal, children] = item;
     const beforeVal = dataBefore[keyName];
     const afterVal = dataAfter[keyName];
@@ -36,7 +36,6 @@ const json = (dataBefore, dataAfter, structure, name = []) => {
 
     return acc;
   }, {});
-};
 
 export default (bef, aft, str) => {
   const diff = json(bef, aft, str);
