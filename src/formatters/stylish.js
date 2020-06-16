@@ -11,35 +11,30 @@ const getValue = (value, depth) => (typeof value === 'object' ? objToStr(value, 
 const indent = (depth) => '    '.repeat(depth);
 
 // Формируем строку для визуального отображения diff
-const stylish = (dataBefore, dataAfter, structure, depth) => {
-  const keys = Object.keys(structure).sort();
+const stylish = (dataBefore, dataAfter, structure, depth) => structure
+  .reduce((acc, item) => {
+    const [keyName, available, equal, children] = item;
+    const beforeVal = dataBefore[keyName];
+    const afterVal = dataAfter[keyName];
 
-  return keys.reduce((acc, key) => {
-    const { available, equal } = structure[key];
-    const beforeVal = dataBefore[key];
-    const afterVal = dataAfter[key];
-
-    if (available === 'before') {
-      return acc.concat(`${indent(depth)}  - ${key}: ${getValue(beforeVal, depth + 1)}\n`);
+    if (children.length > 0) {
+      return acc.concat(`${indent(depth + 1)}${keyName}: {\n${stylish(beforeVal, afterVal, children, depth + 1)}${indent(depth + 1)}}\n`);
     }
 
-    if (available === 'after') {
-      return acc.concat(`${indent(depth)}  + ${key}: ${getValue(afterVal, depth + 1)}\n`);
+    switch (available) {
+      case 'before':
+        return acc.concat(`${indent(depth)}  - ${keyName}: ${getValue(beforeVal, depth + 1)}\n`);
+      case 'after':
+        return acc.concat(`${indent(depth)}  + ${keyName}: ${getValue(afterVal, depth + 1)}\n`);
+      case 'both':
+        if (equal === true) {
+          return acc.concat(`${indent(depth + 1)}${keyName}: ${beforeVal}\n`);
+        }
+        return acc.concat(`${indent(depth)}  - ${keyName}: ${getValue(beforeVal, depth + 1)}\n${indent(depth)}  + ${keyName}: ${getValue(afterVal, depth + 1)}\n`);
+      default:
+        return acc;
     }
-
-    if (available === 'both') {
-      if (equal === true) {
-        return acc.concat(`${indent(depth + 1)}${key}: ${beforeVal}\n`);
-      }
-      return acc.concat(`${indent(depth)}  - ${key}: ${getValue(beforeVal, depth + 1)}\n${indent(depth)}  + ${key}: ${getValue(afterVal, depth + 1)}\n`);
-    }
-
-    if (!available && !equal) {
-      return acc.concat(`${indent(depth + 1)}${key}: {\n${stylish(beforeVal, afterVal, structure[key], depth + 1)}${indent(depth + 1)}}\n`);
-    }
-    return acc;
   }, '');
-};
 
 export default (bef, aft, str, d = 0) => {
   const diff = stylish(bef, aft, str, d).trimRight();

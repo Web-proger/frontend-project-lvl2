@@ -3,14 +3,11 @@ import _ from 'lodash';
 const getValue = (value) => (typeof value === 'object' ? { ...value } : value);
 
 const json = (dataBefore, dataAfter, structure, name = []) => {
-  // Уникальные ключи из 2х массивов, отсортированные по алфавиту.
-  const keys = _.union(_.keys(dataBefore), _.keys(dataAfter)).sort();
-
-  return keys.reduce((acc, key) => {
-    const { available, equal } = structure[key];
-    const beforeVal = dataBefore[key];
-    const afterVal = dataAfter[key];
-    const path = [...name, key];
+  return structure.reduce((acc, item) => {
+    const [keyName, available, equal, children] = item;
+    const beforeVal = dataBefore[keyName];
+    const afterVal = dataAfter[keyName];
+    const path = [...name, keyName];
 
     const setData = (status, oldValue, newValue) => {
       _.set(acc, path, {
@@ -32,8 +29,8 @@ const json = (dataBefore, dataAfter, structure, name = []) => {
       setData('changed', getValue(beforeVal), getValue(afterVal));
     }
 
-    if (!available && !equal) {
-      const obj = json(beforeVal, afterVal, structure[key], name);
+    if (children.length > 0) {
+      const obj = json(beforeVal, afterVal, children, name);
       _.set(acc, path, obj);
     }
 
