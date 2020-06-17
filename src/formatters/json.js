@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const getValue = (value) => (typeof value === 'object' ? { ...value } : value);
+const getValue = (value) => (_.isObject(value) ? { ...value } : value);
 
 const json = (dataBefore, dataAfter, structure, keys = []) => structure
   .reduce((acc, [keyName, available, equal, children]) => {

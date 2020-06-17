@@ -1,13 +1,14 @@
+import _ from 'lodash';
 // Получаем отображение элементов, которые уже не нужно сравнивать
 const objToStr = (obj, depth) => {
   const string = Object.keys(obj).reduce((acc, key) => {
-    const value = typeof obj[key] === 'object' ? objToStr(obj[key], depth + 1) : obj[key];
+    const value = _.isObject(obj[key]) ? objToStr(obj[key], depth + 1) : obj[key];
     return acc.concat(`${'    '.repeat(depth)}    ${key}: ${value}\n`);
   }, '');
   return `{\n${string}${'    '.repeat(depth)}}`;
 };
 
-const getValue = (value, depth) => (typeof value === 'object' ? objToStr(value, depth) : value);
+const getValue = (value, depth) => (_.isObject(value) ? objToStr(value, depth) : value);
 const indent = (depth) => '    '.repeat(depth);
 
 // Формируем строку для визуального отображения diff

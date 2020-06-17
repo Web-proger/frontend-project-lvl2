@@ -9,20 +9,20 @@ const getStructure = (dataBefore, dataAfter) => {
   const keys = _.union(_.keys(dataBefore), _.keys(dataAfter)).sort();
 
   return keys.reduce((acc, key) => {
-    const isBefore = _.has(dataBefore, key);
-    const isAfter = _.has(dataAfter, key);
+    const hasKeyBefore = _.has(dataBefore, key);
+    const hasKeyAfter = _.has(dataAfter, key);
     const beforeValue = dataBefore[key];
     const afterValue = dataAfter[key];
 
-    if (isBefore && isAfter) {
-      if (typeof beforeValue === 'object' && typeof afterValue === 'object') {
+    if (hasKeyBefore && hasKeyAfter) {
+      if (_.isObject(beforeValue) && _.isObject(afterValue)) {
         return [...acc, [key, 'both', false, getStructure(beforeValue, afterValue)]];
       }
 
       const equal = beforeValue === afterValue;
       return [...acc, [key, 'both', equal, []]];
     }
-    const available = isBefore ? 'before' : 'after';
+    const available = hasKeyBefore ? 'before' : 'after';
     return [...acc, [key, available, false, []]];
   }, []);
 };

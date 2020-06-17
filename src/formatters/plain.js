@@ -1,4 +1,6 @@
-const getValue = (value) => (typeof value === 'object' ? '[complex value]' : value);
+import _ from 'lodash';
+
+const getValue = (value) => (_.isObject(value) ? '[complex value]' : value);
 
 const plain = (beforeData, afterData, structure, keys = []) => {
   const diff = structure.reduce((acc, [keyName, available, equal, children]) => {
