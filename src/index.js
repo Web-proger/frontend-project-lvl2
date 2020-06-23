@@ -8,23 +8,27 @@ import getJson from './parsers';
 const getStructure = (dataBefore, dataAfter) => {
   const keys = _.union(_.keys(dataBefore), _.keys(dataAfter)).sort();
 
-  return keys.reduce((acc, key) => {
+  return keys.map((key) => {
     const hasKeyBefore = _.has(dataBefore, key);
     const hasKeyAfter = _.has(dataAfter, key);
     const beforeValue = dataBefore[key];
     const afterValue = dataAfter[key];
+    const children = (_.isObject(beforeValue) && _.isObject(afterValue))
+      ? getStructure(beforeValue, afterValue)
+      : [];
 
-    if (hasKeyBefore && hasKeyAfter) {
-      if (_.isObject(beforeValue) && _.isObject(afterValue)) {
-        return [...acc, [key, 'both', false, getStructure(beforeValue, afterValue)]];
-      }
+    const available = hasKeyBefore && hasKeyAfter
+      ? 'both'
+      : beforeValue
+        ? 'before' : 'after';
 
-      const equal = beforeValue === afterValue;
-      return [...acc, [key, 'both', equal, []]];
-    }
-    const available = hasKeyBefore ? 'before' : 'after';
-    return [...acc, [key, available, false, []]];
-  }, []);
+    return {
+      key,
+      available,
+      equal: beforeValue === afterValue,
+      children,
+    };
+  });
 };
 
 // Получаем расширение файла
@@ -43,5 +47,6 @@ export default (firstConfig, secondConfig, formatType = 'stylish') => {
   const dataAfter = getJson(fs.readFileSync(afterPath, 'utf8'), afterExt);
 
   const structure = getStructure(dataBefore, dataAfter);
+
   return format(dataBefore, dataAfter, structure, formatType);
 };
