@@ -3,10 +3,15 @@ import _ from 'lodash';
 const getValue = (value) => (_.isObject(value) ? { ...value } : value);
 
 const json = (dataBefore, dataAfter, structure, keys = []) => structure
-  .reduce((acc, [keyName, available, equal, children]) => {
-    const beforeValue = dataBefore[keyName];
-    const afterValue = dataAfter[keyName];
-    const path = [...keys, keyName];
+  .reduce((acc, {
+    key,
+    available,
+    equal,
+    children,
+  }) => {
+    const beforeValue = dataBefore[key];
+    const afterValue = dataAfter[key];
+    const path = [...keys, key];
 
     const setData = (status, oldValue, newValue) => {
       _.set(acc, path, {

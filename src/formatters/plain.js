@@ -3,11 +3,16 @@ import _ from 'lodash';
 const getValue = (value) => (_.isObject(value) ? '[complex value]' : value);
 
 const plain = (beforeData, afterData, structure, keys = []) => {
-  const diff = structure.reduce((acc, [keyName, available, equal, children]) => {
-    const beforeValue = beforeData[keyName];
-    const afterValue = afterData[keyName];
+  const diff = structure.reduce((acc, {
+    key,
+    available,
+    equal,
+    children,
+  }) => {
+    const beforeValue = beforeData[key];
+    const afterValue = afterData[key];
     // Массив ключей до текущего объекта
-    const path = [...keys, keyName];
+    const path = [...keys, key];
     // Строковое представление пути к текущему объекту
     const pathStr = `'${path.join('.')}'`;
 
