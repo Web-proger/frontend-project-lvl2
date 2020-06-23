@@ -17,10 +17,14 @@ const getStructure = (dataBefore, dataAfter) => {
       ? getStructure(beforeValue, afterValue)
       : [];
 
-    const available = hasKeyBefore && hasKeyAfter
-      ? 'both'
-      : beforeValue
-        ? 'before' : 'after';
+    const getAvailable = () => {
+      if (hasKeyBefore && hasKeyAfter) {
+        return 'both';
+      }
+      return beforeValue ? 'before' : 'after';
+    };
+
+    const available = getAvailable();
 
     return {
       key,
