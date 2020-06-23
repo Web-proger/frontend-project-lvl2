@@ -2,14 +2,14 @@ import stylish from './stylish';
 import plain from './plain';
 import json from './json';
 
-export default (dataBefore, dataAfter, structure, format) => {
+export default (format) => {
   switch (format) {
     case 'stylish':
-      return stylish(dataBefore, dataAfter, structure);
+      return stylish;
     case 'plain':
-      return plain(dataBefore, dataAfter, structure);
+      return plain;
     case 'json':
-      return json(dataBefore, dataAfter, structure);
+      return json;
     default:
       throw new Error(`Unknown format "${format}", specify one of the formats: "stylish", "plain", "json".`);
   }
