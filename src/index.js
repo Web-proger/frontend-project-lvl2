@@ -28,6 +28,8 @@ const getStructure = (dataBefore, dataAfter) => {
       key,
       available: getAvailable(),
       equal: beforeValue === afterValue,
+      beforeValue,
+      afterValue,
       children,
     };
   });
@@ -51,5 +53,5 @@ export default (firstConfig, secondConfig, formatType = 'stylish') => {
   const structure = getStructure(dataBefore, dataAfter);
   const formatter = formatters(formatType);
 
-  return formatter(dataBefore, dataAfter, structure);
+  return formatter(structure);
 };
