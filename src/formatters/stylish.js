@@ -1,15 +1,19 @@
 import _ from 'lodash';
+
+const getIndent = (depth) => '    '.repeat(depth);
+
 // Получаем отображение элементов, которые уже не нужно сравнивать
 const objToStr = (obj, depth) => {
-  const string = Object.keys(obj).reduce((acc, key) => {
+  const indent = getIndent(depth);
+
+  const string = Object.keys(obj).map((key) => {
     const value = _.isObject(obj[key]) ? objToStr(obj[key], depth + 1) : obj[key];
-    return acc.concat(`${'    '.repeat(depth)}    ${key}: ${value}\n`);
+    return `${indent}    ${key}: ${value}\n`;
   }, '');
-  return `{\n${string}${'    '.repeat(depth)}}`;
+  return `{\n${string}${indent}}`;
 };
 
 const getValue = (value, depth) => (_.isObject(value) ? objToStr(value, depth) : value);
-const getIndent = (depth) => '    '.repeat(depth);
 
 // Формируем строку для визуального отображения diff
 const stylish = (structure, depth) => structure
