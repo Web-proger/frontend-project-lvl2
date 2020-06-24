@@ -2,9 +2,9 @@ import _ from 'lodash';
 
 const getValue = (value) => (_.isObject(value) ? '[complex value]' : value);
 
-const plain = (structure, keys = []) => {
-  const diff = structure
-    .map(({
+export default function plain(structure, keys = []) {
+  return structure
+    .flatMap(({
       key,
       available,
       equal,
@@ -16,23 +16,18 @@ const plain = (structure, keys = []) => {
       const path = `'${pathParts.join('.')}'`;
 
       if (children.length > 0) {
-        return `${plain(children, pathParts)}\n`;
+        return `${plain(children, pathParts)}`;
       }
 
       switch (available) {
         case 'before':
-          return `Property ${path} was deleted\n`;
+          return `Property ${path} was deleted`;
         case 'after':
-          return `Property ${path} was added with value: ${getValue(afterValue)}\n`;
+          return `Property ${path} was added with value: ${getValue(afterValue)}`;
         case 'both':
-          return (equal === false) ? `Property ${path} was changed from: ${getValue(beforeValue)} to ${getValue(afterValue)}\n` : '';
+          return (equal === false) ? `Property ${path} was changed from: ${getValue(beforeValue)} to ${getValue(afterValue)}` : [];
         default:
-          return '';
+          return [];
       }
-    })
-    .join('');
-
-  return diff.trim();
-};
-
-export default plain;
+    }).join('\n');
+}
