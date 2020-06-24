@@ -6,10 +6,12 @@ const getIndent = (depth) => '    '.repeat(depth);
 const objToStr = (obj, depth) => {
   const indent = getIndent(depth);
 
-  const string = Object.keys(obj).map((key) => {
-    const value = _.isObject(obj[key]) ? objToStr(obj[key], depth + 1) : obj[key];
-    return `${indent}    ${key}: ${value}\n`;
-  }, '');
+  const string = Object.keys(obj).flatMap((key) => {
+    const value = obj[key];
+    const stringValue = _.isObject(value) ? objToStr(value, depth + 1) : value;
+    return `${indent}    ${key}: ${stringValue}\n`;
+  });
+
   return `{\n${string}${indent}}`;
 };
 
@@ -17,7 +19,7 @@ const getValue = (value, depth) => (_.isObject(value) ? objToStr(value, depth) :
 
 // Формируем строку для визуального отображения diff
 const stylish = (structure, depth) => structure
-  .map(({
+  .flatMap(({
     key,
     available,
     equal,
@@ -44,7 +46,7 @@ const stylish = (structure, depth) => structure
         }
         return `${indent}  - ${key}: ${beforeTextValue}\n${indent}  + ${key}: ${afterTextValue}\n`;
       default:
-        return '';
+        return [];
     }
   })
   .join('');
