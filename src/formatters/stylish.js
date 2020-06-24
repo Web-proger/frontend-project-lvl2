@@ -9,7 +9,7 @@ const objToStr = (obj, depth) => {
 };
 
 const getValue = (value, depth) => (_.isObject(value) ? objToStr(value, depth) : value);
-const indent = (depth) => '    '.repeat(depth);
+const getIndent = (depth) => '    '.repeat(depth);
 
 // Формируем строку для визуального отображения diff
 const stylish = (dataBefore, dataAfter, structure, depth) => structure
@@ -19,23 +19,26 @@ const stylish = (dataBefore, dataAfter, structure, depth) => structure
     equal,
     children,
   }) => {
-    const beforeVal = dataBefore[key];
-    const afterVal = dataAfter[key];
+    const indent = getIndent(depth);
+    const beforeValue = dataBefore[key];
+    const afterValue = dataAfter[key];
+    const beforeTextValue = getValue(beforeValue, depth + 1);
+    const afterTextValue = getValue(afterValue, depth + 1);
 
     if (children.length > 0) {
-      return `${indent(depth + 1)}${key}: {\n${stylish(beforeVal, afterVal, children, depth + 1)}${indent(depth + 1)}}\n`;
+      return `${indent}    ${key}: {\n${stylish(beforeValue, afterValue, children, depth + 1)}${indent}    }\n`;
     }
 
     switch (available) {
       case 'before':
-        return `${indent(depth)}  - ${key}: ${getValue(beforeVal, depth + 1)}\n`;
+        return `${indent}  - ${key}: ${beforeTextValue}\n`;
       case 'after':
-        return `${indent(depth)}  + ${key}: ${getValue(afterVal, depth + 1)}\n`;
+        return `${indent}  + ${key}: ${afterTextValue}\n`;
       case 'both':
         if (equal === true) {
-          return `${indent(depth + 1)}${key}: ${beforeVal}\n`;
+          return `${indent}    ${key}: ${beforeValue}\n`;
         }
-        return `${indent(depth)}  - ${key}: ${getValue(beforeVal, depth + 1)}\n${indent(depth)}  + ${key}: ${getValue(afterVal, depth + 1)}\n`;
+        return `${indent}  - ${key}: ${beforeTextValue}\n${indent}  + ${key}: ${afterTextValue}\n`;
       default:
         return '';
     }
