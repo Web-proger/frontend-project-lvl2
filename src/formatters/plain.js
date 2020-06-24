@@ -12,24 +12,20 @@ const plain = (beforeData, afterData, structure, keys = []) => {
     }) => {
       const beforeValue = beforeData[key];
       const afterValue = afterData[key];
-      // Массив ключей до текущего объекта
-      const path = [...keys, key];
-      // Строковое представление пути к текущему объекту
-      const pathStr = `'${path.join('.')}'`;
+      const pathParts = [...keys, key];
+      const path = `'${pathParts.join('.')}'`;
 
       if (children.length > 0) {
-        return `${plain(beforeValue, afterValue, children, path)}\n`;
+        return `${plain(beforeValue, afterValue, children, pathParts)}\n`;
       }
 
       switch (available) {
         case 'before':
-          return `Property ${pathStr} was deleted\n`;
+          return `Property ${path} was deleted\n`;
         case 'after':
-          return `Property ${pathStr} was added with value: ${getValue(afterValue)}\n`;
+          return `Property ${path} was added with value: ${getValue(afterValue)}\n`;
         case 'both':
-          return (equal === false)
-            ? `Property ${pathStr} was changed from: ${getValue(beforeValue)} to ${getValue(afterValue)}\n`
-            : '';
+          return (equal === false) ? `Property ${path} was changed from: ${getValue(beforeValue)} to ${getValue(afterValue)}\n` : '';
         default:
           return '';
       }
