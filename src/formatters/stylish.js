@@ -12,21 +12,21 @@ const getValue = (value, depth) => (_.isObject(value) ? objToStr(value, depth) :
 const getIndent = (depth) => '    '.repeat(depth);
 
 // Формируем строку для визуального отображения diff
-const stylish = (dataBefore, dataAfter, structure, depth) => structure
+const stylish = (structure, depth) => structure
   .map(({
     key,
     available,
     equal,
     children,
+    beforeValue,
+    afterValue,
   }) => {
     const indent = getIndent(depth);
-    const beforeValue = dataBefore[key];
-    const afterValue = dataAfter[key];
     const beforeTextValue = getValue(beforeValue, depth + 1);
     const afterTextValue = getValue(afterValue, depth + 1);
 
     if (children.length > 0) {
-      return `${indent}    ${key}: {\n${stylish(beforeValue, afterValue, children, depth + 1)}${indent}    }\n`;
+      return `${indent}    ${key}: {\n${stylish(children, depth + 1)}${indent}    }\n`;
     }
 
     switch (available) {
@@ -45,7 +45,7 @@ const stylish = (dataBefore, dataAfter, structure, depth) => structure
   })
   .join('');
 
-export default (bef, aft, str, d = 0) => {
-  const diff = stylish(bef, aft, str, d).trimRight();
+export default (str) => {
+  const diff = stylish(str, 0).trimRight();
   return `{\n${diff}\n}`;
 };

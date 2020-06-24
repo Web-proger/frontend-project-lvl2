@@ -2,21 +2,21 @@ import _ from 'lodash';
 
 const getValue = (value) => (_.isObject(value) ? '[complex value]' : value);
 
-const plain = (beforeData, afterData, structure, keys = []) => {
+const plain = (structure, keys = []) => {
   const diff = structure
     .map(({
       key,
       available,
       equal,
       children,
+      beforeValue,
+      afterValue,
     }) => {
-      const beforeValue = beforeData[key];
-      const afterValue = afterData[key];
       const pathParts = [...keys, key];
       const path = `'${pathParts.join('.')}'`;
 
       if (children.length > 0) {
-        return `${plain(beforeValue, afterValue, children, pathParts)}\n`;
+        return `${plain(children, pathParts)}\n`;
       }
 
       switch (available) {
