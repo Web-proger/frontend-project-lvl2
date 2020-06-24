@@ -12,7 +12,8 @@ program
       const diff = genDiff(firstConfig, secondConfig, program.format);
       console.log(diff);
     } catch (e) {
-      console.log(e.message);
+      console.error(e.message);
+      process.exit(1);
     }
   });
 
