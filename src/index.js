@@ -24,11 +24,9 @@ const getStructure = (dataBefore, dataAfter) => {
       return beforeValue ? 'before' : 'after';
     };
 
-    const available = getAvailable();
-
     return {
       key,
-      available,
+      available: getAvailable(),
       equal: beforeValue === afterValue,
       children,
     };
