@@ -1,18 +1,18 @@
 import yaml from 'js-yaml';
 import ini from 'ini';
 
-export default (data, ext) => {
-  if (ext === 'yml') {
+export default (data, type) => {
+  if (type === 'yml') {
     return yaml.safeLoad(data);
   }
 
-  if (ext === 'ini') {
+  if (type === 'ini') {
     return ini.parse(data);
   }
 
-  if (ext === 'json') {
+  if (type === 'json') {
     return JSON.parse(data);
   }
 
-  throw new Error(`Unknown data format "${ext}"`);
+  throw new Error(`Unknown data format "${type}"`);
 };
