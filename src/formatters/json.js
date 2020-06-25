@@ -1,9 +1,30 @@
 import _ from 'lodash';
 
-const getValue = (value) => (_.isObject(value) ? { ...value } : value);
+// Получаем отображение элементов, которые уже не нужно сравнивать
+const convertToString = (obj) => {
+  const string = Object.keys(obj)
+    .flatMap((key) => {
+      const value = obj[key];
+      const stringValue = _.isObject(value) ? convertToString(value) : value;
+      return [`"${key}":${stringValue}`];
+    });
 
-const json = (structure, keys = []) => structure
-  .reduce((acc, {
+  return ['{', string, '}'].join('');
+};
+
+const getValue = (value) => {
+  if (_.isObject(value)) {
+    return convertToString(value);
+  }
+  if (_.isString(value)) {
+    return `"${value}"`;
+  }
+  return value;
+};
+
+// Формируем строку для визуального отображения diff
+const json = (structure) => structure
+  .flatMap(({
     key,
     available,
     equal,
@@ -11,37 +32,29 @@ const json = (structure, keys = []) => structure
     beforeValue,
     afterValue,
   }) => {
-    const path = [...keys, key];
-
-    const setData = (status, oldValue, newValue) => {
-      _.set(acc, path, {
-        status,
-        oldValue,
-        newValue,
-      });
-    };
-
-    if (available === 'before') {
-      setData('deleted', getValue(beforeValue), null);
-    }
-
-    if (available === 'after') {
-      setData('added', null, getValue(afterValue));
-    }
-
-    if (available === 'both' && equal === false) {
-      setData('changed', getValue(beforeValue), getValue(afterValue));
-    }
-
     if (children.length > 0) {
-      const obj = json(children, keys);
-      _.set(acc, path, obj);
+      return [`"${key}": {`, json(children), '}'];
     }
 
-    return acc;
-  }, {});
+    const beforeTextValue = getValue(beforeValue);
+    const afterTextValue = getValue(afterValue);
+
+    switch (available) {
+      case 'before':
+        return [`"${key}":{`, '"status":"deleted"', `"oldValue":${beforeTextValue}}`];
+      case 'after':
+        return [`"${key}":{`, '"status":"added"', `"newValue":${afterTextValue}}`];
+      case 'both':
+        if (equal === false) {
+          return [`"${key}":${beforeTextValue}`, '"status":"added"', `"oldValue":${beforeTextValue}`, `"newValue":${afterTextValue}`];
+        }
+        return [];
+      default:
+        return [];
+    }
+  }).join('');
 
 export default (structure) => {
   const diff = json(structure);
-  return JSON.stringify(diff);
+  return `{${diff}}`;
 };
