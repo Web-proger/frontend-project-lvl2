@@ -5,6 +5,7 @@ function convertToString(obj) {
   const string = Object.keys(obj)
     .flatMap((key) => {
       const value = obj[key];
+      // eslint-disable-next-line no-use-before-define
       const stringValue = getValue(value);
       return [`"${key}":${stringValue}`];
     });
@@ -16,10 +17,7 @@ function getValue(value) {
   if (_.isObject(value)) {
     return convertToString(value);
   }
-  if (_.isString(value)) {
-    return `"${value}"`;
-  }
-  return value;
+  return _.isString(value) ? `"${value}"` : value;
 }
 
 // Формируем строку для визуального отображения diff
@@ -32,11 +30,10 @@ const json = (structure) => structure
     beforeValue,
     afterValue,
   }, i, arr) => {
-    if (children.length > 0) {
-      return [`"${key}":{`, json(children), '}'];
-    }
-
     const lastSymbol = arr.length - 1 === i ? '' : ',';
+    if (children.length > 0) {
+      return [`"${key}":{`, json(children), '}', lastSymbol];
+    }
 
     const beforeTextValue = getValue(beforeValue);
     const afterTextValue = getValue(afterValue);
