@@ -41,14 +41,11 @@ const json = (structure) => structure
 
     switch (available) {
       case 'before':
-        return [`"${key}":{`, '"status":"deleted"', `"oldValue":${beforeTextValue}}`];
+        return [`"${key}":{`, '"status":"deleted",', `"oldValue":${beforeTextValue}}`];
       case 'after':
-        return [`"${key}":{`, '"status":"added"', `"newValue":${afterTextValue}}`];
+        return [`"${key}":{`, '"status":"added",', `"newValue":${afterTextValue}}`];
       case 'both':
-        if (equal === false) {
-          return [`"${key}":{`, '"status":"changed"', `"oldValue":${beforeTextValue}`, `"newValue":${afterTextValue}}`];
-        }
-        return [];
+        return (equal === false) ? [`"${key}":{`, '"status":"changed",', `"oldValue":${beforeTextValue},`, `"newValue":${afterTextValue}}`] : [];
       default:
         return [];
     }
