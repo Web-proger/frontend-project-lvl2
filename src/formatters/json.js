@@ -7,10 +7,10 @@ function convertToString(obj) {
       const value = obj[key];
       // eslint-disable-next-line no-use-before-define
       const stringValue = getValue(value);
-      return [`"${key}":${stringValue}`];
+      return `"${key}":${stringValue}`;
     });
 
-  return ['{', string, '}'].join('');
+  return `{${string}}`;
 }
 
 function getValue(value) {
