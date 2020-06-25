@@ -2,7 +2,7 @@ import _ from 'lodash';
 import path from 'path';
 import fs from 'fs';
 import formatters from './formatters';
-import getJson from './parsers';
+import parse from './parsers';
 
 // Получаем структуру дифа
 const getStructure = (dataBefore, dataAfter) => {
@@ -47,8 +47,8 @@ export default (firstConfig, secondConfig, formatType = 'stylish') => {
   const afterExt = getExt(afterPath);
 
   // Данные из конфигов в виде JSON
-  const dataBefore = getJson(fs.readFileSync(beforePath, 'utf8'), beforeExt);
-  const dataAfter = getJson(fs.readFileSync(afterPath, 'utf8'), afterExt);
+  const dataBefore = parse(fs.readFileSync(beforePath, 'utf8'), beforeExt);
+  const dataAfter = parse(fs.readFileSync(afterPath, 'utf8'), afterExt);
 
   const structure = getStructure(dataBefore, dataAfter);
   const formatter = formatters(formatType);
