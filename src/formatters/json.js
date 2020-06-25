@@ -1,18 +1,18 @@
 import _ from 'lodash';
 
 // Получаем отображение элементов, которые уже не нужно сравнивать
-const convertToString = (obj) => {
+function convertToString(obj) {
   const string = Object.keys(obj)
     .flatMap((key) => {
       const value = obj[key];
-      const stringValue = _.isObject(value) ? convertToString(value) : value;
+      const stringValue = getValue(value);
       return [`"${key}":${stringValue}`];
     });
 
   return ['{', string, '}'].join('');
-};
+}
 
-const getValue = (value) => {
+function getValue(value) {
   if (_.isObject(value)) {
     return convertToString(value);
   }
@@ -20,7 +20,7 @@ const getValue = (value) => {
     return `"${value}"`;
   }
   return value;
-};
+}
 
 // Формируем строку для визуального отображения diff
 const json = (structure) => structure
@@ -33,7 +33,7 @@ const json = (structure) => structure
     afterValue,
   }) => {
     if (children.length > 0) {
-      return [`"${key}": {`, json(children), '}'];
+      return [`"${key}":{`, json(children), '}'];
     }
 
     const beforeTextValue = getValue(beforeValue);
@@ -46,7 +46,7 @@ const json = (structure) => structure
         return [`"${key}":{`, '"status":"added"', `"newValue":${afterTextValue}}`];
       case 'both':
         if (equal === false) {
-          return [`"${key}":${beforeTextValue}`, '"status":"added"', `"oldValue":${beforeTextValue}`, `"newValue":${afterTextValue}`];
+          return [`"${key}":{`, '"status":"changed"', `"oldValue":${beforeTextValue}`, `"newValue":${afterTextValue}}`];
         }
         return [];
       default:
