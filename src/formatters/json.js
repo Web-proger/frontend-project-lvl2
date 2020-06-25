@@ -31,21 +31,23 @@ const json = (structure) => structure
     children,
     beforeValue,
     afterValue,
-  }) => {
+  }, i, arr) => {
     if (children.length > 0) {
       return [`"${key}":{`, json(children), '}'];
     }
+
+    const lastSymbol = arr.length - 1 === i ? '' : ',';
 
     const beforeTextValue = getValue(beforeValue);
     const afterTextValue = getValue(afterValue);
 
     switch (available) {
       case 'before':
-        return [`"${key}":{`, '"status":"deleted",', `"oldValue":${beforeTextValue}}`];
+        return [`"${key}":{`, '"status":"deleted",', `"oldValue":${beforeTextValue}}`, lastSymbol];
       case 'after':
-        return [`"${key}":{`, '"status":"added",', `"newValue":${afterTextValue}}`];
+        return [`"${key}":{`, '"status":"added",', `"newValue":${afterTextValue}}`, lastSymbol];
       case 'both':
-        return (equal === false) ? [`"${key}":{`, '"status":"changed",', `"oldValue":${beforeTextValue},`, `"newValue":${afterTextValue}}`] : [];
+        return (equal === false) ? [`"${key}":{`, '"status":"changed",', `"oldValue":${beforeTextValue},`, `"newValue":${afterTextValue}}`, lastSymbol] : [];
       default:
         return [];
     }
