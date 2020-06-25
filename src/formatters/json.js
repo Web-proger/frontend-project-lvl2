@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 // Получаем отображение элементов, которые уже не нужно сравнивать
 function convertToString(obj) {
-  const string = Object.keys(obj)
+  const strings = Object.keys(obj)
     .flatMap((key) => {
       const value = obj[key];
       // eslint-disable-next-line no-use-before-define
@@ -10,7 +10,7 @@ function convertToString(obj) {
       return `"${key}":${stringValue}`;
     });
 
-  return `{${string}}`;
+  return `{${strings}}`;
 }
 
 function getValue(value) {
