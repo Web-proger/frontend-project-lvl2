@@ -3,19 +3,19 @@ import _ from 'lodash';
 const getIndent = (depth) => '    '.repeat(depth);
 
 // Получаем отображение элементов, которые уже не нужно сравнивать
-const objToStr = (obj, depth) => {
+const convertToString = (obj, depth) => {
   const indent = getIndent(depth);
 
   const string = Object.keys(obj).flatMap((key) => {
     const value = obj[key];
-    const stringValue = _.isObject(value) ? objToStr(value, depth + 1) : value;
-    return `${indent}    ${key}: ${stringValue}\n`;
+    const stringValue = _.isObject(value) ? convertToString(value, depth + 1) : value;
+    return [`${indent}    ${key}: ${stringValue}`];
   });
 
-  return `{\n${string}${indent}}`;
+  return [['{'], [string], [`${indent}}`]].flat().join('\n');
 };
 
-const getValue = (value, depth) => (_.isObject(value) ? objToStr(value, depth) : value);
+const getValue = (value, depth) => (_.isObject(value) ? convertToString(value, depth) : value);
 
 // Формируем строку для визуального отображения diff
 const stylish = (structure, depth) => structure
@@ -32,26 +32,26 @@ const stylish = (structure, depth) => structure
     const afterTextValue = getValue(afterValue, depth + 1);
 
     if (children.length > 0) {
-      return `${indent}    ${key}: {\n${stylish(children, depth + 1)}${indent}    }\n`;
+      return [[`${indent}    ${key}: {`], [stylish(children, depth + 1)], [`${indent}    }`]];
     }
 
     switch (available) {
       case 'before':
-        return `${indent}  - ${key}: ${beforeTextValue}\n`;
+        return [`${indent}  - ${key}: ${beforeTextValue}`];
       case 'after':
-        return `${indent}  + ${key}: ${afterTextValue}\n`;
+        return [`${indent}  + ${key}: ${afterTextValue}`];
       case 'both':
         if (equal === true) {
-          return `${indent}    ${key}: ${beforeValue}\n`;
+          return [`${indent}    ${key}: ${beforeValue}`];
         }
-        return `${indent}  - ${key}: ${beforeTextValue}\n${indent}  + ${key}: ${afterTextValue}\n`;
+        return [[`${indent}  - ${key}: ${beforeTextValue}`], [`${indent}  + ${key}: ${afterTextValue}`]];
       default:
         return [];
     }
-  })
-  .join('');
+  }).join('\n');
+
 
 export default (str) => {
-  const diff = stylish(str, 0).trimRight();
+  const diff = stylish(str, 0);
   return `{\n${diff}\n}`;
 };
