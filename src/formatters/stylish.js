@@ -6,13 +6,14 @@ const getIndent = (depth) => '    '.repeat(depth);
 const convertToString = (obj, depth) => {
   const indent = getIndent(depth);
 
-  const string = Object.keys(obj).flatMap((key) => {
-    const value = obj[key];
-    const stringValue = _.isObject(value) ? convertToString(value, depth + 1) : value;
-    return [`${indent}    ${key}: ${stringValue}`];
-  });
+  const string = Object.keys(obj)
+    .flatMap((key) => {
+      const value = obj[key];
+      const stringValue = _.isObject(value) ? convertToString(value, depth + 1) : value;
+      return [`${indent}    ${key}: ${stringValue}`];
+    });
 
-  return [['{'], [string], [`${indent}}`]].flat().join('\n');
+  return ['{', string, `${indent}}`].join('\n');
 };
 
 const getValue = (value, depth) => (_.isObject(value) ? convertToString(value, depth) : value);
@@ -32,7 +33,7 @@ const stylish = (structure, depth) => structure
     const afterTextValue = getValue(afterValue, depth + 1);
 
     if (children.length > 0) {
-      return [[`${indent}    ${key}: {`], [stylish(children, depth + 1)], [`${indent}    }`]];
+      return [`${indent}    ${key}: {`, stylish(children, depth + 1), `${indent}    }`];
     }
 
     switch (available) {
@@ -44,7 +45,7 @@ const stylish = (structure, depth) => structure
         if (equal === true) {
           return [`${indent}    ${key}: ${beforeValue}`];
         }
-        return [[`${indent}  - ${key}: ${beforeTextValue}`], [`${indent}  + ${key}: ${afterTextValue}`]];
+        return [`${indent}  - ${key}: ${beforeTextValue}`, `${indent}  + ${key}: ${afterTextValue}`];
       default:
         return [];
     }
