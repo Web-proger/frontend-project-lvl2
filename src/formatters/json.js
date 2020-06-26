@@ -1,24 +1,14 @@
 import _ from 'lodash';
 
 // Получаем отображение элементов, которые уже не нужно сравнивать
-function convertToString(obj) {
-  const strings = Object.keys(obj)
-    .flatMap((key) => {
-      const value = obj[key];
-      // eslint-disable-next-line no-use-before-define
-      const stringValue = getValue(value);
-      return `"${key}":${stringValue}`;
-    });
+const getValue = (data) => {
+  const convertToString = (obj) => Object.entries(obj).flatMap(([key, value]) => `"${key}":${getValue(value)}`);
 
-  return `{${strings}}`;
-}
-
-function getValue(value) {
-  if (_.isObject(value)) {
-    return convertToString(value);
+  if (_.isObject(data)) {
+    return `{${convertToString(data)}}`;
   }
-  return _.isString(value) ? `"${value}"` : value;
-}
+  return _.isString(data) ? `"${data}"` : data;
+};
 
 // Формируем строку для визуального отображения diff
 const json = (structure) => structure
