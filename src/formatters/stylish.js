@@ -1,17 +1,15 @@
 import _ from 'lodash';
 
-const getIndent = (depth) => '    '.repeat(depth);
+const getIndent = (size) => '    '.repeat(size);
 
 // Получаем отображение элементов, которые уже не нужно сравнивать
 const convertToString = (obj, depth) => {
   const indent = getIndent(depth);
 
-  const string = Object.keys(obj)
-    .flatMap((key) => {
-      const value = obj[key];
-      const stringValue = _.isObject(value) ? convertToString(value, depth + 1) : value;
-      return [`${indent}    ${key}: ${stringValue}`];
-    });
+  const string = Object.entries(obj).flatMap(([key, value]) => {
+    const stringValue = _.isObject(value) ? convertToString(value, depth + 1) : value;
+    return `${indent}    ${key}: ${stringValue}`;
+  });
 
   return ['{', string, `${indent}}`].join('\n');
 };
@@ -52,7 +50,7 @@ const stylish = (structure, depth) => structure
   }).join('\n');
 
 
-export default (str) => {
-  const diff = stylish(str, 0);
+export default (structure) => {
+  const diff = stylish(structure, 0);
   return `{\n${diff}\n}`;
 };
