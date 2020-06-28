@@ -37,17 +37,17 @@ const getStructure = (dataBefore, dataAfter) => {
 const getExtname = (filePath) => path.extname(filePath).split('.')[1] || '';
 
 export default (firstConfig, secondConfig, formatType = 'stylish') => {
-  const beforePath = path.resolve(firstConfig);
-  const afterPath = path.resolve(secondConfig);
+  const oldFilepath = path.resolve(firstConfig);
+  const newFilepath = path.resolve(secondConfig);
 
-  const beforeExtname = getExtname(beforePath);
-  const afterExtname = getExtname(afterPath);
+  const oldExtname = getExtname(oldFilepath);
+  const newExtname = getExtname(newFilepath);
 
-  const dataBefore = parse(fs.readFileSync(beforePath, 'utf8'), beforeExtname);
-  const dataAfter = parse(fs.readFileSync(afterPath, 'utf8'), afterExtname);
+  const oldData = parse(fs.readFileSync(oldFilepath, 'utf8'), oldExtname);
+  const newData = parse(fs.readFileSync(newFilepath, 'utf8'), newExtname);
 
-  const structure = getStructure(dataBefore, dataAfter);
-  const formatter = formatters(formatType);
+  const structure = getStructure(oldData, newData);
+  const format = formatters(formatType);
 
-  return formatter(structure);
+  return format(structure);
 };
