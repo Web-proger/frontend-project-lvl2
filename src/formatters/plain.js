@@ -5,7 +5,7 @@ const getValue = (value) => (_.isObject(value) ? '[complex value]' : value);
 const plain = (structure, keys = []) => structure
   .flatMap(({
     key,
-    available,
+    status,
     equal,
     children,
     beforeValue,
@@ -18,12 +18,12 @@ const plain = (structure, keys = []) => structure
       return `${plain(children, pathParts)}`;
     }
 
-    switch (available) {
-      case 'before':
+    switch (status) {
+      case 'deleted':
         return `Property ${path} was deleted`;
-      case 'after':
+      case 'added':
         return `Property ${path} was added with value: ${getValue(afterValue)}`;
-      case 'both':
+      case 'modified':
         return (equal === false) ? `Property ${path} was changed from: ${getValue(beforeValue)} to ${getValue(afterValue)}` : [];
       default:
         return [];

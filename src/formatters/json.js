@@ -12,7 +12,7 @@ const getValue = (data) => {
 const json = (structure) => structure
   .flatMap(({
     key,
-    available,
+    status,
     equal,
     children,
     beforeValue,
@@ -26,12 +26,12 @@ const json = (structure) => structure
     const beforeTextValue = getValue(beforeValue);
     const afterTextValue = getValue(afterValue);
 
-    switch (available) {
-      case 'before':
+    switch (status) {
+      case 'deleted':
         return [`"${key}":{`, '"status":"deleted",', `"oldValue":${beforeTextValue}}`, lastSymbol];
-      case 'after':
+      case 'added':
         return [`"${key}":{`, '"status":"added",', `"newValue":${afterTextValue}}`, lastSymbol];
-      case 'both':
+      case 'modified':
         return (equal === false) ? [`"${key}":{`, '"status":"changed",', `"oldValue":${beforeTextValue},`, `"newValue":${afterTextValue}}`, lastSymbol] : [];
       default:
         return [];

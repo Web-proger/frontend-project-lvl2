@@ -18,7 +18,7 @@ const getValue = (value, depth) => (_.isObject(value) ? convertToString(value, d
 const stylish = (structure, depth) => structure
   .flatMap(({
     key,
-    available,
+    status,
     equal,
     children,
     beforeValue,
@@ -32,12 +32,12 @@ const stylish = (structure, depth) => structure
       return [`${indent}    ${key}: {`, stylish(children, depth + 1), `${indent}    }`];
     }
 
-    switch (available) {
-      case 'before':
+    switch (status) {
+      case 'deleted':
         return [`${indent}  - ${key}: ${beforeTextValue}`];
-      case 'after':
+      case 'added':
         return [`${indent}  + ${key}: ${afterTextValue}`];
-      case 'both':
+      case 'modified':
         if (equal === true) {
           return [`${indent}    ${key}: ${beforeValue}`];
         }

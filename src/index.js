@@ -4,7 +4,6 @@ import fs from 'fs';
 import formatters from './formatters';
 import parse from './parsers';
 
-// Получаем структуру дифа
 const getStructure = (dataBefore, dataAfter) => {
   const keys = _.union(_.keys(dataBefore), _.keys(dataAfter)).sort();
 
@@ -17,16 +16,16 @@ const getStructure = (dataBefore, dataAfter) => {
       ? getStructure(beforeValue, afterValue)
       : [];
 
-    const getAvailable = () => {
+    const getStatus = () => {
       if (hasKeyBefore && hasKeyAfter) {
-        return 'both';
+        return 'modified';
       }
-      return beforeValue ? 'before' : 'after';
+      return beforeValue ? 'deleted' : 'added';
     };
 
     return {
       key,
-      available: getAvailable(),
+      status: getStatus(),
       equal: beforeValue === afterValue,
       beforeValue,
       afterValue,
@@ -35,17 +34,17 @@ const getStructure = (dataBefore, dataAfter) => {
   });
 };
 
-const getExt = (filePath) => path.extname(filePath).split('.')[1] || '';
+const getExtname = (filePath) => path.extname(filePath).split('.')[1] || '';
 
 export default (firstConfig, secondConfig, formatType = 'stylish') => {
   const beforePath = path.resolve(firstConfig);
   const afterPath = path.resolve(secondConfig);
 
-  const beforeExt = getExt(beforePath);
-  const afterExt = getExt(afterPath);
+  const beforeExtname = getExtname(beforePath);
+  const afterExtname = getExtname(afterPath);
 
-  const dataBefore = parse(fs.readFileSync(beforePath, 'utf8'), beforeExt);
-  const dataAfter = parse(fs.readFileSync(afterPath, 'utf8'), afterExt);
+  const dataBefore = parse(fs.readFileSync(beforePath, 'utf8'), beforeExtname);
+  const dataAfter = parse(fs.readFileSync(afterPath, 'utf8'), afterExtname);
 
   const structure = getStructure(dataBefore, dataAfter);
   const formatter = formatters(formatType);
