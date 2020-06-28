@@ -6,7 +6,6 @@ const plain = (structure, keys = []) => structure
   .flatMap(({
     key,
     status,
-    equal,
     children,
     beforeValue,
     afterValue,
@@ -24,7 +23,9 @@ const plain = (structure, keys = []) => structure
       case 'added':
         return `Property ${path} was added with value: ${getValue(afterValue)}`;
       case 'modified':
-        return (equal === false) ? `Property ${path} was changed from: ${getValue(beforeValue)} to ${getValue(afterValue)}` : [];
+        return `Property ${path} was changed from: ${getValue(beforeValue)} to ${getValue(afterValue)}`;
+      case 'unmodified':
+        return [];
       default:
         return [];
     }

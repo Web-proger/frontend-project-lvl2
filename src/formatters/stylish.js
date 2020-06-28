@@ -19,7 +19,6 @@ const stylish = (structure, depth) => structure
   .flatMap(({
     key,
     status,
-    equal,
     children,
     beforeValue,
     afterValue,
@@ -38,10 +37,9 @@ const stylish = (structure, depth) => structure
       case 'added':
         return [`${indent}  + ${key}: ${afterTextValue}`];
       case 'modified':
-        if (equal === true) {
-          return [`${indent}    ${key}: ${beforeValue}`];
-        }
         return [`${indent}  - ${key}: ${beforeTextValue}`, `${indent}  + ${key}: ${afterTextValue}`];
+      case 'unmodified':
+        return [`${indent}    ${key}: ${beforeValue}`];
       default:
         return [];
     }

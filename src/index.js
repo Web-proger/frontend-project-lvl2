@@ -18,7 +18,7 @@ const getDiffStructure = (dataBefore, dataAfter) => {
 
     const getStatus = () => {
       if (hasKeyBefore && hasKeyAfter) {
-        return 'modified';
+        return beforeValue === afterValue ? 'unmodified' : 'modified';
       }
       return beforeValue ? 'deleted' : 'added';
     };

@@ -13,7 +13,6 @@ const json = (structure) => structure
   .flatMap(({
     key,
     status,
-    equal,
     children,
     beforeValue,
     afterValue,
@@ -32,7 +31,9 @@ const json = (structure) => structure
       case 'added':
         return [`"${key}":{`, '"status":"added",', `"newValue":${afterTextValue}}`, lastSymbol];
       case 'modified':
-        return (equal === false) ? [`"${key}":{`, '"status":"changed",', `"oldValue":${beforeTextValue},`, `"newValue":${afterTextValue}}`, lastSymbol] : [];
+        return [`"${key}":{`, '"status":"changed",', `"oldValue":${beforeTextValue},`, `"newValue":${afterTextValue}}`, lastSymbol];
+      case 'unmodified':
+        return [];
       default:
         return [];
     }
