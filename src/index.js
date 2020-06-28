@@ -4,7 +4,7 @@ import fs from 'fs';
 import formatters from './formatters';
 import parse from './parsers';
 
-const getStructure = (dataBefore, dataAfter) => {
+const getDiffStructure = (dataBefore, dataAfter) => {
   const keys = _.union(_.keys(dataBefore), _.keys(dataAfter)).sort();
 
   return keys.map((key) => {
@@ -13,7 +13,7 @@ const getStructure = (dataBefore, dataAfter) => {
     const beforeValue = dataBefore[key];
     const afterValue = dataAfter[key];
     const children = (_.isObject(beforeValue) && _.isObject(afterValue))
-      ? getStructure(beforeValue, afterValue)
+      ? getDiffStructure(beforeValue, afterValue)
       : [];
 
     const getStatus = () => {
@@ -46,8 +46,8 @@ export default (firstConfig, secondConfig, formatType = 'stylish') => {
   const oldData = parse(fs.readFileSync(oldFilepath, 'utf8'), oldExtname);
   const newData = parse(fs.readFileSync(newFilepath, 'utf8'), newExtname);
 
-  const structure = getStructure(oldData, newData);
+  const diff = getDiffStructure(oldData, newData);
   const format = formatters(formatType);
 
-  return format(structure);
+  return format(diff);
 };
