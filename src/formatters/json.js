@@ -1,6 +1,5 @@
 import _ from 'lodash';
 
-// Получаем отображение элементов, которые уже не нужно сравнивать
 const getValue = (data) => {
   const convertToString = (obj) => Object.entries(obj).flatMap(([key, value]) => `"${key}":${getValue(value)}`);
 
@@ -10,7 +9,6 @@ const getValue = (data) => {
   return _.isString(data) ? `"${data}"` : data;
 };
 
-// Формируем строку для визуального отображения diff
 const json = (structure) => structure
   .flatMap(({
     key,

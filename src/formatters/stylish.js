@@ -2,7 +2,6 @@ import _ from 'lodash';
 
 const getIndent = (size) => '    '.repeat(size);
 
-// Получаем отображение элементов, которые уже не нужно сравнивать
 const convertToString = (obj, depth) => {
   const indent = getIndent(depth);
 
@@ -16,7 +15,6 @@ const convertToString = (obj, depth) => {
 
 const getValue = (value, depth) => (_.isObject(value) ? convertToString(value, depth) : value);
 
-// Формируем строку для визуального отображения diff
 const stylish = (structure, depth) => structure
   .flatMap(({
     key,
