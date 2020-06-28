@@ -26,7 +26,6 @@ const getDiffStructure = (dataBefore, dataAfter) => {
     return {
       key,
       status: getStatus(),
-      equal: beforeValue === afterValue,
       beforeValue,
       afterValue,
       children,

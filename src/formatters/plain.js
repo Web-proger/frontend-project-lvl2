@@ -24,8 +24,6 @@ const plain = (structure, keys = []) => structure
         return `Property ${path} was added with value: ${getValue(afterValue)}`;
       case 'modified':
         return `Property ${path} was changed from: ${getValue(beforeValue)} to ${getValue(afterValue)}`;
-      case 'unmodified':
-        return [];
       default:
         return [];
     }
