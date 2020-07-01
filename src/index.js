@@ -16,16 +16,19 @@ const getDiffStructure = (dataBefore, dataAfter) => {
       ? getDiffStructure(beforeValue, afterValue)
       : [];
 
-    const getStatus = () => {
-      if (hasKeyBefore && hasKeyAfter) {
-        return beforeValue === afterValue ? 'unmodified' : 'modified';
-      }
-      return beforeValue ? 'deleted' : 'added';
-    };
+    if (hasKeyBefore && hasKeyAfter) {
+      return {
+        key,
+        status: beforeValue === afterValue ? 'unmodified' : 'modified',
+        beforeValue,
+        afterValue,
+        children,
+      };
+    }
 
     return {
       key,
-      status: getStatus(),
+      status: beforeValue ? 'deleted' : 'added',
       beforeValue,
       afterValue,
       children,
@@ -33,7 +36,7 @@ const getDiffStructure = (dataBefore, dataAfter) => {
   });
 };
 
-const getExtname = (filePath) => path.extname(filePath).split('.')[1] || '';
+const getExtname = (filePath) => path.extname(filePath).slice(1);
 
 export default (firstConfig, secondConfig, formatType = 'stylish') => {
   const oldFilepath = path.resolve(firstConfig);
