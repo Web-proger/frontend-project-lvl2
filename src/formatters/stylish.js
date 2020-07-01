@@ -41,7 +41,7 @@ const stylish = (structure, depth) => structure
       case 'unmodified':
         return [`${indent}    ${key}: ${beforeValue}`];
       default:
-        return [];
+        throw new Error(`Unknown status "${status}"`);
     }
   }).join('\n');
 

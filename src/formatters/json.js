@@ -32,8 +32,10 @@ const json = (structure) => structure
         return [`"${key}":{`, '"status":"added",', `"newValue":${afterTextValue}}`, lastSymbol];
       case 'modified':
         return [`"${key}":{`, '"status":"changed",', `"oldValue":${beforeTextValue},`, `"newValue":${afterTextValue}}`, lastSymbol];
-      default:
+      case 'unmodified':
         return [];
+      default:
+        throw new Error(`Unknown status "${status}"`);
     }
   }).join('');
 

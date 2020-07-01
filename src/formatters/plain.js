@@ -25,8 +25,10 @@ const plain = (structure) => {
           return `Property ${path} was added with value: ${getValue(afterValue)}`;
         case 'modified':
           return `Property ${path} was changed from: ${getValue(beforeValue)} to ${getValue(afterValue)}`;
-        default:
+        case 'unmodified':
           return [];
+        default:
+          throw new Error(`Unknown status "${status}"`);
       }
     }).join('\n');
 
