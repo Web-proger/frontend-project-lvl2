@@ -3,6 +3,26 @@ import path from 'path';
 import fs from 'fs';
 import formatters from './formatters';
 import parse from './parsers';
+import util from 'util';
+
+const getStructure = (node) => Object.entries(node).map(([key, value]) => {
+  const type = _.isObject(value) ? 'composite' : 'simple';
+  const children = _.isObject(value) ? getStructure(value) : [];
+
+  if (type === 'composite') {
+    return {
+      key,
+      type,
+      children,
+    };
+  }
+
+  return {
+    key,
+    type,
+    value,
+  };
+});
 
 const getDiffStructure = (dataBefore, dataAfter) => {
   const keys = _.union(_.keys(dataBefore), _.keys(dataAfter)).sort();
@@ -12,17 +32,21 @@ const getDiffStructure = (dataBefore, dataAfter) => {
     const hasKeyAfter = _.has(dataAfter, key);
     const beforeValue = dataBefore[key];
     const afterValue = dataAfter[key];
-    const children = (_.isObject(beforeValue) && _.isObject(afterValue))
-      ? getDiffStructure(beforeValue, afterValue)
-      : [];
 
     if (hasKeyBefore && hasKeyAfter) {
       return {
         key,
         status: beforeValue === afterValue ? 'unmodified' : 'modified',
-        beforeValue,
-        afterValue,
-        children,
+        nodeBefore: {
+          type: beforeType,
+          value: beforeValue,
+          children,
+        },
+        nodeAfter: {
+          type: afterType,
+          value: afterValue,
+          children,
+        },
       };
     }
 
@@ -48,8 +72,15 @@ export default (firstConfig, secondConfig, formatType = 'stylish') => {
   const oldData = parse(fs.readFileSync(oldFilepath, 'utf8'), oldExtname);
   const newData = parse(fs.readFileSync(newFilepath, 'utf8'), newExtname);
 
-  const diff = getDiffStructure(oldData, newData);
-  const format = formatters(formatType);
+  const beforeStructure = getStructure(oldData);
+  const afterStructure = getStructure(newData);
 
-  return format(diff);
+  const format = formatters(formatType);
+  //const diff = getDiffStructure(beforeStructure, afterStructure);
+
+  //return format(diff);
+
+
+  console.log(util.inspect(beforeStructure, { depth: 20 }));
+  console.log(util.inspect(afterStructure, { depth: 20 }));
 };
