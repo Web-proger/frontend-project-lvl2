@@ -28,15 +28,16 @@ const getDiffStructure = (dataBefore, dataAfter) => {
   const keys = _.union(_.keys(dataBefore), _.keys(dataAfter)).sort();
 
   return keys.map((key) => {
-    const hasKeyBefore = _.has(dataBefore, key);
-    const hasKeyAfter = _.has(dataAfter, key);
     const beforeValue = dataBefore[key];
     const afterValue = dataAfter[key];
+    const hasKeyBoth = _.has(dataBefore, key) && _.has(dataAfter, key);
+    const valueEqual = hasKeyBoth && (beforeValue === afterValue);
 
-    if (hasKeyBefore && hasKeyAfter) {
+
+    if (hasKeyBoth) {
       return {
         key,
-        status: beforeValue === afterValue ? 'unmodified' : 'modified',
+        status: valueEqual ? 'unmodified' : 'modified',
         nodeBefore: {
           type: beforeType,
           value: beforeValue,
@@ -50,12 +51,16 @@ const getDiffStructure = (dataBefore, dataAfter) => {
       };
     }
 
+    if (valueEqual) {
+
+    }
+
     return {
       key,
+      type: 'simple',
       status: beforeValue ? 'deleted' : 'added',
       beforeValue,
       afterValue,
-      children,
     };
   });
 };
