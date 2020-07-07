@@ -12,18 +12,19 @@ const getValue = (data) => {
 const json = (structure) => structure
   .flatMap(({
     key,
+    type,
     status,
     children,
-    beforeValue,
-    afterValue,
+    nodeBefore,
+    nodeAfter,
   }, i, arr) => {
     const lastSymbol = arr.length - 1 === i ? '' : ',';
-    if (children.length > 0) {
+    if (children) {
       return [`"${key}":{`, json(children), '}', lastSymbol];
     }
 
-    const beforeTextValue = getValue(beforeValue);
-    const afterTextValue = getValue(afterValue);
+    const beforeTextValue = getValue(nodeBefore.value);
+    const afterTextValue = getValue(nodeAfter.value);
 
     switch (status) {
       case 'deleted':

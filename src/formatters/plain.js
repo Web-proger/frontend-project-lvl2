@@ -6,15 +6,16 @@ const plain = (structure) => {
   const iter = (innerStructure, keys) => innerStructure
     .flatMap(({
       key,
+      type,
       status,
       children,
-      beforeValue,
-      afterValue,
+      nodeBefore,
+      nodeAfter,
     }) => {
       const pathParts = [...keys, key];
       const path = `'${pathParts.join('.')}'`;
 
-      if (children.length > 0) {
+      if (children) {
         return `${iter(children, pathParts)}`;
       }
 
@@ -22,9 +23,9 @@ const plain = (structure) => {
         case 'deleted':
           return `Property ${path} was deleted`;
         case 'added':
-          return `Property ${path} was added with value: ${getValue(afterValue)}`;
+          return `Property ${path} was added with value: ${getValue(nodeAfter.value)}`;
         case 'modified':
-          return `Property ${path} was changed from: ${getValue(beforeValue)} to ${getValue(afterValue)}`;
+          return `Property ${path} was changed from: ${getValue(nodeBefore.value)} to ${getValue(nodeAfter.value)}`;
         case 'unmodified':
           return [];
         default:

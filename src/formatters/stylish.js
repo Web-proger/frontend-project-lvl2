@@ -18,18 +18,20 @@ const getValue = (value, depth) => (_.isObject(value) ? convertToString(value, d
 const stylish = (structure, depth) => structure
   .flatMap(({
     key,
+    type,
     status,
     children,
-    beforeValue,
-    afterValue,
+    nodeBefore,
+    nodeAfter,
   }) => {
     const indent = getIndent(depth);
-    const beforeTextValue = getValue(beforeValue, depth + 1);
-    const afterTextValue = getValue(afterValue, depth + 1);
 
-    if (children.length > 0) {
+    if (children) {
       return [`${indent}    ${key}: {`, stylish(children, depth + 1), `${indent}    }`];
     }
+
+    const beforeTextValue = getValue(nodeBefore.value, depth + 1);
+    const afterTextValue = getValue(nodeAfter.value, depth + 1);
 
     switch (status) {
       case 'deleted':
@@ -39,7 +41,7 @@ const stylish = (structure, depth) => structure
       case 'modified':
         return [`${indent}  - ${key}: ${beforeTextValue}`, `${indent}  + ${key}: ${afterTextValue}`];
       case 'unmodified':
-        return [`${indent}    ${key}: ${beforeValue}`];
+        return [`${indent}    ${key}: ${nodeBefore.value}`];
       default:
         throw new Error(`Unknown status "${status}"`);
     }

@@ -3,7 +3,6 @@ import path from 'path';
 import fs from 'fs';
 import formatters from './formatters';
 import parse from './parsers';
-import util from 'util';
 
 const getDiffStructure = (dataBefore, dataAfter) => {
   const keys = _.union(_.keys(dataBefore), _.keys(dataAfter)).sort();
@@ -90,8 +89,5 @@ export default (firstConfig, secondConfig, formatType = 'stylish') => {
   const format = formatters(formatType);
   const diff = getDiffStructure(oldData, newData);
 
-  //return format(diff);
-
-
-  console.log(util.inspect(diff, { depth: 20 }));
+  return format(diff);
 };
