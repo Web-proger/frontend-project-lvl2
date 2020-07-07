@@ -15,36 +15,37 @@ const convertToString = (obj, depth) => {
 
 const getValue = (value, depth) => (_.isObject(value) ? convertToString(value, depth) : value);
 
-const getStylishView = (structure, depth) => structure
-  .flatMap(({
-    key,
-    type,
-    children,
-    beforeValue,
-    afterValue,
-  }) => {
-    const indent = getIndent(depth);
-    const beforeTextValue = getValue(beforeValue, depth + 1);
-    const afterTextValue = getValue(afterValue, depth + 1);
+const getStylishView = (structure) => {
+  const iter = (innerStructure, depth) => innerStructure
+    .flatMap(({
+      key,
+      type,
+      children,
+      beforeValue,
+      afterValue,
+    }) => {
+      const indent = getIndent(depth);
+      const beforeTextValue = getValue(beforeValue, depth + 1);
+      const afterTextValue = getValue(afterValue, depth + 1);
 
-    switch (type) {
-      case 'withSubstructure':
-        return [`${indent}    ${key}: {`, getStylishView(children, depth + 1), `${indent}    }`];
-      case 'deleted':
-        return [`${indent}  - ${key}: ${beforeTextValue}`];
-      case 'added':
-        return [`${indent}  + ${key}: ${afterTextValue}`];
-      case 'modified':
-        return [`${indent}  - ${key}: ${beforeTextValue}`, `${indent}  + ${key}: ${afterTextValue}`];
-      case 'unmodified':
-        return [`${indent}    ${key}: ${beforeValue}`];
-      default:
-        throw new Error(`Unknown status "${type}"`);
-    }
-  }).join('\n');
+      switch (type) {
+        case 'withSubstructure':
+          return [`${indent}    ${key}: {`, iter(children, depth + 1), `${indent}    }`];
+        case 'deleted':
+          return [`${indent}  - ${key}: ${beforeTextValue}`];
+        case 'added':
+          return [`${indent}  + ${key}: ${afterTextValue}`];
+        case 'modified':
+          return [`${indent}  - ${key}: ${beforeTextValue}`, `${indent}  + ${key}: ${afterTextValue}`];
+        case 'unmodified':
+          return [`${indent}    ${key}: ${beforeValue}`];
+        default:
+          throw new Error(`Unknown status "${type}"`);
+      }
+    }).join('\n');
 
-
-export default (structure) => {
-  const diff = getStylishView(structure, 0);
+  const diff = iter(structure, 0);
   return `{\n${diff}\n}`;
 };
+
+export default getStylishView;
