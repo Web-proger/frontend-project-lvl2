@@ -9,7 +9,7 @@ const getValue = (data) => {
   return _.isString(data) ? `"${data}"` : data;
 };
 
-const json = (structure) => structure
+const getJson = (structure) => structure
   .flatMap(({
     key,
     type,
@@ -23,7 +23,7 @@ const json = (structure) => structure
 
     switch (type) {
       case 'withSubstructure':
-        return [`"${key}":{`, json(children), '}', lastSymbol];
+        return [`"${key}":{`, getJson(children), '}', lastSymbol];
       case 'deleted':
         return [`"${key}":{`, '"status":"deleted",', `"oldValue":${beforeTextValue}}`, lastSymbol];
       case 'added':
@@ -38,6 +38,6 @@ const json = (structure) => structure
   }).join('');
 
 export default (structure) => {
-  const diff = json(structure);
+  const diff = getJson(structure);
   return `{${diff}}`;
 };

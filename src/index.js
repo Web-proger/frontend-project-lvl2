@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import path from 'path';
 import fs from 'fs';
-import formatters from './formatters';
+import getFormatter from './formatters';
 import parse from './parsers';
 
 const getDiffStructure = (dataBefore, dataAfter) => {
@@ -62,7 +62,7 @@ export default (firstConfig, secondConfig, formatType = 'stylish') => {
   const oldData = parse(fs.readFileSync(oldFilepath, 'utf8'), oldExtname);
   const newData = parse(fs.readFileSync(newFilepath, 'utf8'), newExtname);
 
-  const format = formatters(formatType);
+  const format = getFormatter(formatType);
   const diff = getDiffStructure(oldData, newData);
 
   return format(diff);

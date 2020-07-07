@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 const getValue = (value) => (_.isObject(value) ? '[complex value]' : value);
 
-const plain = (structure) => {
+const getPlainView = (structure) => {
   const iter = (innerStructure, keys) => innerStructure
     .flatMap(({
       key,
@@ -33,4 +33,4 @@ const plain = (structure) => {
   return iter(structure, []);
 };
 
-export default plain;
+export default getPlainView;

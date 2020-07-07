@@ -15,7 +15,7 @@ const convertToString = (obj, depth) => {
 
 const getValue = (value, depth) => (_.isObject(value) ? convertToString(value, depth) : value);
 
-const stylish = (structure, depth) => structure
+const getStylishView = (structure, depth) => structure
   .flatMap(({
     key,
     type,
@@ -29,7 +29,7 @@ const stylish = (structure, depth) => structure
 
     switch (type) {
       case 'withSubstructure':
-        return [`${indent}    ${key}: {`, stylish(children, depth + 1), `${indent}    }`];
+        return [`${indent}    ${key}: {`, getStylishView(children, depth + 1), `${indent}    }`];
       case 'deleted':
         return [`${indent}  - ${key}: ${beforeTextValue}`];
       case 'added':
@@ -45,6 +45,6 @@ const stylish = (structure, depth) => structure
 
 
 export default (structure) => {
-  const diff = stylish(structure, 0);
+  const diff = getStylishView(structure, 0);
   return `{\n${diff}\n}`;
 };
