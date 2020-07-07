@@ -15,7 +15,7 @@ const convertToString = (obj, depth) => {
 
 const getValue = (value, depth) => (_.isObject(value) ? convertToString(value, depth) : value);
 
-const getStylishView = (structure) => {
+export default (structure) => {
   const iter = (innerStructure, depth) => innerStructure
     .flatMap(({
       key,
@@ -47,5 +47,3 @@ const getStylishView = (structure) => {
   const diff = iter(structure, 0);
   return `{\n${diff}\n}`;
 };
-
-export default getStylishView;
