@@ -1,43 +1,41 @@
 import _ from 'lodash';
 
-const getValue = (data) => {
-  const convertToString = (obj) => Object.entries(obj).flatMap(([key, value]) => `"${key}":${getValue(value)}`);
-
-  if (_.isObject(data)) {
-    return `{${convertToString(data)}}`;
-  }
-  return _.isString(data) ? `"${data}"` : data;
-};
-
-const getJson = (structure) => structure
-  .flatMap(({
+const getJson = (structure, name = []) => structure
+  .reduce((acc, {
     key,
     type,
     children,
     beforeValue,
     afterValue,
-  }, i, arr) => {
-    const lastSymbol = arr.length - 1 === i ? '' : ',';
-    const beforeTextValue = getValue(beforeValue);
-    const afterTextValue = getValue(afterValue);
-
+  }) => {
+    const path = [...name, key];
     switch (type) {
       case 'withSubstructure':
-        return [`"${key}":{`, getJson(children), '}', lastSymbol];
+        return _.set(acc, path, getJson(children));
       case 'deleted':
-        return [`"${key}":{`, '"status":"deleted",', `"oldValue":${beforeTextValue}}`, lastSymbol];
+        return _.set(acc, path, {
+          status: 'deleted',
+          oldValue: beforeValue,
+        });
       case 'added':
-        return [`"${key}":{`, '"status":"added",', `"newValue":${afterTextValue}}`, lastSymbol];
+        return _.set(acc, path, {
+          status: 'added',
+          newValue: afterValue,
+        });
       case 'modified':
-        return [`"${key}":{`, '"status":"changed",', `"oldValue":${beforeTextValue},`, `"newValue":${afterTextValue}}`, lastSymbol];
+        return _.set(acc, path, {
+          status: 'changed',
+          oldValue: beforeValue,
+          newValue: afterValue,
+        });
       case 'unmodified':
-        return [];
+        return acc;
       default:
         throw new Error(`Unknown status "${type}"`);
     }
-  }).join('');
+  }, {});
 
 export default (structure) => {
   const diff = getJson(structure);
-  return `{${diff}}`;
+  return JSON.stringify(diff);
 };
