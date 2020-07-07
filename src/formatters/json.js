@@ -8,22 +8,23 @@ const getJson = (structure, name = []) => structure
     beforeValue,
     afterValue,
   }) => {
+    const newAcc = _.cloneDeep(acc);
     const path = [...name, key];
     switch (type) {
       case 'withSubstructure':
-        return _.set(acc, path, getJson(children));
+        return _.set(newAcc, path, getJson(children));
       case 'deleted':
-        return _.set(acc, path, {
+        return _.set(newAcc, path, {
           status: 'deleted',
           oldValue: beforeValue,
         });
       case 'added':
-        return _.set(acc, path, {
+        return _.set(newAcc, path, {
           status: 'added',
           newValue: afterValue,
         });
       case 'modified':
-        return _.set(acc, path, {
+        return _.set(newAcc, path, {
           status: 'changed',
           oldValue: beforeValue,
           newValue: afterValue,
