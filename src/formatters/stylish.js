@@ -19,21 +19,17 @@ const stylish = (structure, depth) => structure
   .flatMap(({
     key,
     type,
-    status,
     children,
-    nodeBefore,
-    nodeAfter,
+    beforeValue,
+    afterValue,
   }) => {
     const indent = getIndent(depth);
+    const beforeTextValue = getValue(beforeValue, depth + 1);
+    const afterTextValue = getValue(afterValue, depth + 1);
 
-    if (children) {
-      return [`${indent}    ${key}: {`, stylish(children, depth + 1), `${indent}    }`];
-    }
-
-    const beforeTextValue = getValue(nodeBefore.value, depth + 1);
-    const afterTextValue = getValue(nodeAfter.value, depth + 1);
-
-    switch (status) {
+    switch (type) {
+      case 'withSubstructure':
+        return [`${indent}    ${key}: {`, stylish(children, depth + 1), `${indent}    }`];
       case 'deleted':
         return [`${indent}  - ${key}: ${beforeTextValue}`];
       case 'added':
@@ -41,9 +37,9 @@ const stylish = (structure, depth) => structure
       case 'modified':
         return [`${indent}  - ${key}: ${beforeTextValue}`, `${indent}  + ${key}: ${afterTextValue}`];
       case 'unmodified':
-        return [`${indent}    ${key}: ${nodeBefore.value}`];
+        return [`${indent}    ${key}: ${beforeValue}`];
       default:
-        throw new Error(`Unknown status "${status}"`);
+        throw new Error(`Unknown status "${type}"`);
     }
   }).join('\n');
 

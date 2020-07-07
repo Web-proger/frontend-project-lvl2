@@ -13,20 +13,17 @@ const json = (structure) => structure
   .flatMap(({
     key,
     type,
-    status,
     children,
-    nodeBefore,
-    nodeAfter,
+    beforeValue,
+    afterValue,
   }, i, arr) => {
     const lastSymbol = arr.length - 1 === i ? '' : ',';
-    if (children) {
-      return [`"${key}":{`, json(children), '}', lastSymbol];
-    }
+    const beforeTextValue = getValue(beforeValue);
+    const afterTextValue = getValue(afterValue);
 
-    const beforeTextValue = getValue(nodeBefore.value);
-    const afterTextValue = getValue(nodeAfter.value);
-
-    switch (status) {
+    switch (type) {
+      case 'withSubstructure':
+        return [`"${key}":{`, json(children), '}', lastSymbol];
       case 'deleted':
         return [`"${key}":{`, '"status":"deleted",', `"oldValue":${beforeTextValue}}`, lastSymbol];
       case 'added':
@@ -36,7 +33,7 @@ const json = (structure) => structure
       case 'unmodified':
         return [];
       default:
-        throw new Error(`Unknown status "${status}"`);
+        throw new Error(`Unknown status "${type}"`);
     }
   }).join('');
 

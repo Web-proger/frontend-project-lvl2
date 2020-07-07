@@ -7,29 +7,26 @@ const plain = (structure) => {
     .flatMap(({
       key,
       type,
-      status,
       children,
-      nodeBefore,
-      nodeAfter,
+      beforeValue,
+      afterValue,
     }) => {
       const pathParts = [...keys, key];
       const path = `'${pathParts.join('.')}'`;
 
-      if (children) {
-        return `${iter(children, pathParts)}`;
-      }
-
-      switch (status) {
+      switch (type) {
+        case 'withSubstructure':
+          return `${iter(children, pathParts)}`;
         case 'deleted':
           return `Property ${path} was deleted`;
         case 'added':
-          return `Property ${path} was added with value: ${getValue(nodeAfter.value)}`;
+          return `Property ${path} was added with value: ${getValue(afterValue)}`;
         case 'modified':
-          return `Property ${path} was changed from: ${getValue(nodeBefore.value)} to ${getValue(nodeAfter.value)}`;
+          return `Property ${path} was changed from: ${getValue(beforeValue)} to ${getValue(afterValue)}`;
         case 'unmodified':
           return [];
         default:
-          throw new Error(`Unknown status "${status}"`);
+          throw new Error(`Unknown status "${type}"`);
       }
     }).join('\n');
 

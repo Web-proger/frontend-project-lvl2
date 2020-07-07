@@ -6,13 +6,10 @@ import parse from './parsers';
 
 const getDiffStructure = (dataBefore, dataAfter) => {
   const keys = _.union(_.keys(dataBefore), _.keys(dataAfter)).sort();
-  const getType = (value) => (_.isObject(value) ? 'composite' : 'simple');
 
   return keys.map((key) => {
     const beforeValue = dataBefore[key];
     const afterValue = dataAfter[key];
-    const beforeType = getType(beforeValue);
-    const afterType = getType(afterValue);
     const hasKeyBoth = _.has(dataBefore, key) && _.has(dataAfter, key);
     const valueEqual = hasKeyBoth && (beforeValue === afterValue);
     const bothObject = _.isObject(beforeValue) && _.isObject(afterValue);
@@ -21,7 +18,7 @@ const getDiffStructure = (dataBefore, dataAfter) => {
       const children = getDiffStructure(beforeValue, afterValue);
       return {
         key,
-        type: 'composite',
+        type: 'withSubstructure',
         children,
       };
     }
@@ -29,47 +26,26 @@ const getDiffStructure = (dataBefore, dataAfter) => {
     if (valueEqual) {
       return {
         key,
-        type: 'simple',
-        status: 'unmodified',
-        nodeBefore: {
-          type: beforeType,
-          value: beforeValue,
-        },
-        nodeAfter: {
-          type: afterType,
-          value: afterValue,
-        },
+        type: 'unmodified',
+        beforeValue,
+        afterValue,
       };
     }
 
     if (hasKeyBoth) {
       return {
         key,
-        type: 'simple',
-        status: 'modified',
-        nodeBefore: {
-          type: beforeType,
-          value: beforeValue,
-        },
-        nodeAfter: {
-          type: afterType,
-          value: afterValue,
-        },
+        type: 'modified',
+        beforeValue,
+        afterValue,
       };
     }
 
     return {
       key,
-      type: 'simple',
-      status: beforeValue ? 'deleted' : 'added',
-      nodeBefore: {
-        type: beforeType,
-        value: beforeValue,
-      },
-      nodeAfter: {
-        type: afterType,
-        value: afterValue,
-      },
+      type: beforeValue ? 'deleted' : 'added',
+      beforeValue,
+      afterValue,
     };
   });
 };
