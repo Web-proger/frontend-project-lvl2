@@ -15,8 +15,8 @@ const getDiffStructure = (dataBefore, dataAfter) => {
 
     if (afterValue === beforeValue) {
       return {
-        key,
         type: 'unmodified',
+        key,
         beforeValue,
         afterValue,
       };
@@ -24,35 +24,23 @@ const getDiffStructure = (dataBefore, dataAfter) => {
 
     if (bothObject) {
       const children = getDiffStructure(beforeValue, afterValue);
-      return {
-        key,
-        type: 'withSubstructure',
-        children,
-      };
+      return { type: 'withSubstructure', key, children };
     }
 
     if (hasKeyBoth) {
       return {
-        key,
         type: 'modified',
+        key,
         beforeValue,
         afterValue,
       };
     }
 
     if (beforeValue) {
-      return {
-        key,
-        type: 'deleted',
-        beforeValue,
-      };
+      return { type: 'deleted', key, beforeValue };
     }
 
-    return {
-      key,
-      type: 'added',
-      afterValue,
-    };
+    return { type: 'added', key, afterValue };
   });
 };
 
