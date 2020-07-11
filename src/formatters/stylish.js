@@ -30,15 +30,22 @@ export default (structure) => {
 
       switch (type) {
         case 'withSubstructure':
-          return [`${indent}    ${key}: {`, iter(children, depth + 1), `${indent}    }`];
+          return [
+            `${indent}    ${key}: {`,
+            iter(children, depth + 1),
+            `${indent}    }`,
+          ];
         case 'deleted':
-          return [`${indent}  - ${key}: ${beforeTextValue}`];
+          return `${indent}  - ${key}: ${beforeTextValue}`;
         case 'added':
-          return [`${indent}  + ${key}: ${afterTextValue}`];
+          return `${indent}  + ${key}: ${afterTextValue}`;
         case 'modified':
-          return [`${indent}  - ${key}: ${beforeTextValue}`, `${indent}  + ${key}: ${afterTextValue}`];
+          return [
+            `${indent}  - ${key}: ${beforeTextValue}`,
+            `${indent}  + ${key}: ${afterTextValue}`,
+          ];
         case 'unmodified':
-          return [`${indent}    ${key}: ${beforeValue}`];
+          return `${indent}    ${key}: ${beforeValue}`;
         default:
           throw new Error(`Unknown status "${type}"`);
       }
