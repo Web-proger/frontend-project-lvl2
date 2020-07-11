@@ -43,15 +43,15 @@ const getDiffStructure = (dataBefore, dataAfter) => {
 
 const getExtname = (filePath) => path.extname(filePath).slice(1);
 
-export default (firstConfig, secondConfig, formatType = 'stylish') => {
-  const oldFilepath = path.resolve(firstConfig);
-  const newFilepath = path.resolve(secondConfig);
+export default (oldFilePath, newFilePath, formatType = 'stylish') => {
+  const oldAbsFilepath = path.resolve(oldFilePath);
+  const newAbsFilepath = path.resolve(newFilePath);
 
-  const oldExtname = getExtname(oldFilepath);
-  const newExtname = getExtname(newFilepath);
+  const oldExtname = getExtname(oldAbsFilepath);
+  const newExtname = getExtname(newAbsFilepath);
 
-  const oldData = parse(fs.readFileSync(oldFilepath, 'utf8'), oldExtname);
-  const newData = parse(fs.readFileSync(newFilepath, 'utf8'), newExtname);
+  const oldData = parse(fs.readFileSync(oldAbsFilepath, 'utf8'), oldExtname);
+  const newData = parse(fs.readFileSync(newAbsFilepath, 'utf8'), newExtname);
 
   const format = getFormatter(formatType);
   const diff = getDiffStructure(oldData, newData);
