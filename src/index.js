@@ -11,10 +11,18 @@ const getDiffStructure = (dataBefore, dataAfter) => {
     const beforeValue = dataBefore[key];
     const afterValue = dataAfter[key];
     const hasKeyBoth = _.has(dataBefore, key) && _.has(dataAfter, key);
-    const valueEqual = hasKeyBoth && (beforeValue === afterValue);
-    const withSubstructure = _.isObject(beforeValue) && _.isObject(afterValue);
+    const bothObject = _.isObject(beforeValue) && _.isObject(afterValue);
 
-    if (withSubstructure) {
+    if (afterValue === beforeValue) {
+      return {
+        key,
+        type: 'unmodified',
+        beforeValue,
+        afterValue,
+      };
+    }
+
+    if (bothObject) {
       const children = getDiffStructure(beforeValue, afterValue);
       return {
         key,
@@ -26,16 +34,23 @@ const getDiffStructure = (dataBefore, dataAfter) => {
     if (hasKeyBoth) {
       return {
         key,
-        type: valueEqual ? 'unmodified' : 'modified',
+        type: 'modified',
         beforeValue,
         afterValue,
       };
     }
 
+    if (beforeValue) {
+      return {
+        key,
+        type: 'deleted',
+        beforeValue,
+      };
+    }
+
     return {
       key,
-      type: beforeValue ? 'deleted' : 'added',
-      beforeValue,
+      type: 'added',
       afterValue,
     };
   });
